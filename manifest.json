@@ -1,0 +1,23 @@
+{
+  "name": "เครื่องคำนวณผ่อนบ้าน (Home Loan)",
+  "short_name": "ผ่อนบ้าน",
+  "description": "คำนวณการผ่อนบ้าน ดอกเบี้ย และการโปะเงินเพื่อให้หมดไวขึ้น",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f7fafc",
+  "theme_color": "#5a67d8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2641/2641242.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/192/2641/2641242.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

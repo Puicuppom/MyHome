@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> เครื่องคำนวณผ่อนบ้าน </title>
+<meta name="theme-color" content="#5a67d8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="ผ่อนบ้าน">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2641/2641242.png">
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js')
+            .then(reg => console.log('Service Worker Registered'))
+            .catch(err => console.log('Service Worker Error', err));
+        });
+      }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS ทั้งหมดเหมือนเดิม ไม่มีการเปลี่ยนแปลง */
+        :root{--primary-color:#5a67d8;--primary-darker:#4c51bf;--secondary-color:#a0aec0;--secondary-darker:#718096;--background-color:#f7fafc;--card-background:#fff;--text-color:#2d3748;--subtle-text-color:#718096;--border-color:#e2e8f0;--danger-color:#f56565;--danger-background:#fed7d7;--success-color:#48bb78;--border-radius:12px;--card-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -2px rgba(0,0,0,.05);--focus-shadow:0 0 0 3px rgba(90,103,216,.3)}body{font-family:'Sarabun',sans-serif;background-color:var(--background-color);color:var(--text-color);line-height:1.6;margin:0;padding:20px;display:flex;justify-content:center;align-items:flex-start;min-height:100vh}.container{background:var(--card-background);padding:25px;box-shadow:var(--card-shadow);border-radius:var(--border-radius);width:100%;max-width:800px;box-sizing:border-box;transition:all .3s ease}h1{color:var(--text-color);text-align:center;margin-bottom:25px;font-size:1.8rem;font-weight:700}.form-grid{display:grid;grid-template-columns:1fr;gap:18px}.form-group{display:flex;flex-direction:column}label{margin-bottom:8px;font-weight:600;color:var(--text-color);font-size:.95rem}input[type=number],input[type=date],input[type=text]{padding:12px 15px;border:1px solid var(--border-color);border-radius:8px;font-size:1rem;font-family:'Sarabun',sans-serif;width:100%;box-sizing:border-box;background-color:#fff;transition:border-color .2s,box-shadow .2s}input[type=number]:focus,input[type=date]:focus,input[type=text]:focus{outline:none;border-color:var(--primary-color);box-shadow:var(--focus-shadow)}.button-group{display:flex;gap:12px;margin-top:25px}.button-group button{margin-top:0;flex-grow:1;padding:12px 15px;border-radius:8px;font-weight:600;font-size:1.05rem;border:none;cursor:pointer;transition:all .2s ease}.button-group button:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,.1)}.button-group button:active{transform:translateY(0);box-shadow:none}#calculateBtn{background-color:var(--primary-color);color:#fff}#calculateBtn:hover{background-color:var(--primary-darker)}button.secondary{background-color:#e2e8f0;color:var(--subtle-text-color)}button.secondary:hover{background-color:#cbd5e0;color:var(--text-color)}#interest-section{grid-column:1/-1;margin-top:20px;border-top:1px solid var(--border-color);padding-top:20px}#interest-section>label{font-weight:700;font-size:1.1rem;color:var(--primary-darker)}.rate-tier{display:flex;flex-direction:column;gap:12px;margin-bottom:15px;padding:15px;border:1px solid var(--border-color);border-radius:var(--border-radius);position:relative;background-color:#fcfcfd}#addRateTierBtn{background-color:transparent;color:var(--primary-color);border:1px solid var(--primary-color);padding:8px 15px;font-weight:600;margin-top:10px;border-radius:8px;cursor:pointer;transition:all .2s ease}#addRateTierBtn:hover{background-color:var(--primary-color);color:#fff}.remove-tier-btn{background-color:var(--danger-background);color:var(--danger-color);border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;font-weight:700;font-size:1.2rem;position:absolute;top:12px;right:12px;transition:all .2s ease-in-out;display:flex;justify-content:center;align-items:center;padding:0;line-height:1}.remove-tier-btn:hover{background-color:var(--danger-color);color:#fff;transform:scale(1.1)}#result{margin-top:30px;padding:25px;background-color:#edf2f7;border-radius:var(--border-radius)}.summary{font-size:1.1rem;font-weight:500}.summary p{margin:10px 0}.summary span{font-weight:700;color:var(--primary-darker)}#table-container{overflow:auto;-webkit-overflow-scrolling:touch;margin-top:20px;max-height:60vh;border:1px solid var(--border-color);border-radius:var(--border-radius)}#payment-table{width:100%;min-width:600px;border-collapse:collapse}#payment-table th{position:sticky;top:0;z-index:10;background-color:var(--card-background);color:var(--primary-darker);text-align:center;padding:12px 15px;white-space:nowrap;font-weight:600;font-size:.9rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border-color)}#payment-table td{border-bottom:1px solid var(--border-color);padding:12px 15px;text-align:right;white-space:nowrap;font-size:.95rem}#payment-table tr:last-child td{border-bottom:none}#payment-table tr:nth-child(even){background-color:#f7fafc}@media (min-width:768px){.container{padding:40px}h1{font-size:2.1rem;margin-bottom:30px}.form-grid{grid-template-columns:repeat(2,1fr);gap:20px}.rate-tier{flex-direction:row;align-items:flex-end;gap:15px;padding:0;border:none;background:none}.remove-tier-btn{position:static;margin-bottom:13px}}
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>เครื่องคำนวณผ่อนบ้าน</h1>
+
+        <div class="form-grid" id="main-form">
+            <div class="form-group">
+                <label for="loanAmount">ยอดเงินกู้ (บาท)</label>
+                <!-- === 1. แก้ไขทุกช่องที่เกี่ยวกับเงิน === -->
+                <input type="text" id="loanAmount" value="3,000,000" inputmode="numeric" pattern="[0-9,]*">
+            </div>
+            <div class="form-group">
+                <label for="monthlyPayment">ค่างวดต่อเดือน (บาท)</label>
+                <input type="text" id="monthlyPayment" value="15,300" inputmode="numeric" pattern="[0-9,]*">
+            </div>
+            <div class="form-group">
+                <label for="extraPayment">เงินโปะเพิ่มต่อเดือน (บาท)</label>
+                <input type="text" id="extraPayment" value="2,500" inputmode="numeric" pattern="[0-9,]*">
+            </div>
+            <div class="form-group">
+                <label for="birthDate">วัน/เดือน/ปีเกิด</label>
+                <input type="date" id="birthDate" value="1991-12-04">
+            </div>
+        </div>
+        
+        <div id="interest-section"><label>อัตราดอกเบี้ยตามช่วงเวลา</label><div id="interestRateTiers"></div><button type="button" id="addRateTierBtn">+ เพิ่มช่วงดอกเบี้ย</button></div><div class="button-group"><button id="calculateBtn">คำนวณ</button><button id="resetBtn" type="button" class="secondary">ล้างข้อมูล</button></div><div id="result" style="display:none;"><div class="summary"><p>ระยะเวลาผ่อนชำระ: <span id="durationResult"></span></p><p>ผ่อนหมดเมื่ออายุ: <span id="ageResult"></span></p><p>จำนวนงวดทั้งหมด: <span id="monthsResult"></span> งวด</p><p>ดอกเบี้ยจ่ายทั้งหมด: <span id="totalInterestResult"></span> บาท</p></div><div id="table-container"><table id="payment-table"></table></div></div>
+    </div>
+
+    <script>
+        // === 2. ระบุ Element ทั้งหมดที่ต้องการจัดรูปแบบ ===
+        const loanAmountInput = document.getElementById('loanAmount');
+        const monthlyPaymentInput = document.getElementById('monthlyPayment');
+        const extraPaymentInput = document.getElementById('extraPayment');
+        
+        // ส่วนที่เหลือ
+        const interestTiersContainer = document.getElementById('interestRateTiers');
+        const addRateTierBtn = document.getElementById('addRateTierBtn');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const mainForm = document.getElementById('main-form');
+        const STORAGE_KEY = 'homeLoanCalculatorData_v4';
+
+        // --- Helper Functions (ใช้ร่วมกัน) ---
+        function formatNumberWithCommas(value) {
+            if (!value) return '';
+            const numberString = value.toString().replace(/[^0-9]/g, '');
+            if (numberString === '') return '';
+            return parseInt(numberString, 10).toLocaleString('en-US');
+        }
+
+        function parseFormattedNumber(value) {
+            if (!value) return 0;
+            return parseFloat(value.toString().replace(/,/g, '')) || 0;
+        }
+
+        // --- 3. สร้างฟังก์ชันสำหรับผูก Event และนำไปใช้กับทุกช่อง ---
+        function applyFormatting(inputElement) {
+            inputElement.addEventListener('input', (e) => {
+                const input = e.target;
+                const originalValue = input.value;
+                const cursorPosition = input.selectionStart;
+                const formattedValue = formatNumberWithCommas(originalValue);
+                input.value = formattedValue;
+                const newCursorPosition = cursorPosition + (formattedValue.length - originalValue.length);
+                input.setSelectionRange(newCursorPosition, newCursorPosition);
+            });
+        }
+
+        // เรียกใช้ฟังก์ชันกับทุกช่องที่ต้องการ
+        applyFormatting(loanAmountInput);
+        applyFormatting(monthlyPaymentInput);
+        applyFormatting(extraPaymentInput);
+
+        // --- 4. ปรับปรุงฟังก์ชัน Save/Load/Calculate ---
+        function saveDataToLocalStorage() {
+            const dataToSave = {
+                loanAmount: loanAmountInput.value,
+                monthlyPayment: monthlyPaymentInput.value,
+                extraPayment: extraPaymentInput.value,
+                birthDate: document.getElementById('birthDate').value,
+                interestTiers: Array.from(interestTiersContainer.querySelectorAll('.rate-tier')).map(tierEl => ({
+                    from: tierEl.querySelector('.fromMonth').value,
+                    to: tierEl.querySelector('.toMonth').value,
+                    rate: tierEl.querySelector('.rate').value
+                }))
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+        }
+        
+        function loadDataFromLocalStorage() {
+            const savedDataJSON = localStorage.getItem(STORAGE_KEY);
+            if (savedDataJSON) {
+                const savedData = JSON.parse(savedDataJSON);
+                loanAmountInput.value = formatNumberWithCommas(savedData.loanAmount || '3000000');
+                monthlyPaymentInput.value = formatNumberWithCommas(savedData.monthlyPayment || '15300');
+                extraPaymentInput.value = formatNumberWithCommas(savedData.extraPayment || '2500');
+                document.getElementById('birthDate').value = savedData.birthDate || '1991-12-04';
+                interestTiersContainer.innerHTML = '';
+                if (savedData.interestTiers && savedData.interestTiers.length > 0) {
+                    savedData.interestTiers.forEach(tier => addInterestTier(tier.from, tier.to, tier.rate));
+                } else {
+                    loadDefaultTiers();
+                }
+            } else {
+                loadDefaultTiers();
+                // จัดรูปแบบค่าเริ่มต้นด้วย
+                loanAmountInput.value = formatNumberWithCommas(loanAmountInput.value);
+                monthlyPaymentInput.value = formatNumberWithCommas(monthlyPaymentInput.value);
+                extraPaymentInput.value = formatNumberWithCommas(extraPaymentInput.value);
+            }
+        }
+
+        calculateBtn.addEventListener('click', function() {
+            saveDataToLocalStorage();
+            // ใช้ parseFormattedNumber กับทุกช่อง
+            let principal = parseFormattedNumber(loanAmountInput.value);
+            const monthlyPayment = parseFormattedNumber(monthlyPaymentInput.value);
+            const extraPayment = parseFormattedNumber(extraPaymentInput.value);
+            
+            // ส่วนที่เหลือของโค้ดคำนวณ (เหมือนเดิม ไม่มีการเปลี่ยนแปลง)
+            const birthDateStr=document.getElementById('birthDate').value;const interestTiers=[];const tierElements=interestTiersContainer.querySelectorAll('.rate-tier');for(let tierEl of tierElements){const from=parseInt(tierEl.querySelector('.fromMonth').value,10);const toVal=tierEl.querySelector('.toMonth').value;const to=toVal?parseInt(toVal,10):Infinity;const rate=parseFloat(tierEl.querySelector('.rate').value);if(!isNaN(from)&&!isNaN(rate))interestTiers.push({from,to,rate})}
+            if(isNaN(principal)||principal<=0||isNaN(monthlyPayment)||monthlyPayment<=0||interestTiers.length===0||!interestTiers[0].rate){alert('กรุณากรอกข้อมูลสำคัญให้ครบถ้วน: ยอดกู้, ค่างวด, และอัตราดอกเบี้ย');return}
+            if(!birthDateStr){alert('กรุณากรอกวันเกิด');return}
+            const totalMonthlyPayment=monthlyPayment+extraPayment;let monthCount=0;let totalInterestPaid=0;let remainingBalance=principal;let paymentSchedule=[];
+            while(remainingBalance>0){monthCount++;const currentTier=interestTiers.find(tier=>monthCount>=tier.from&&monthCount<=tier.to);if(!currentTier){alert(`ไม่พบการตั้งค่าดอกเบี้ยสำหรับเดือนที่ ${monthCount}`);return}
+            const monthlyRate=currentTier.rate/100/12;const interestForMonth=remainingBalance*monthlyRate;if(monthCount===1&&totalMonthlyPayment<=interestForMonth){alert('ค่างวด (รวมเงินโปะ) น้อยกว่าดอกเบี้ยเดือนแรก จะไม่สามารถผ่อนหมดได้');return}
+            let principalPaid=totalMonthlyPayment-interestForMonth;let actualPayment=totalMonthlyPayment;if(principalPaid<0)principalPaid=0;if(remainingBalance+interestForMonth<=totalMonthlyPayment){principalPaid=remainingBalance;actualPayment=remainingBalance+interestForMonth;remainingBalance=0}else{remainingBalance-=principalPaid}
+            totalInterestPaid+=interestForMonth;paymentSchedule.push({month:monthCount,payment:actualPayment,interest:interestForMonth,principalPaid:principalPaid,balance:remainingBalance,rate:currentTier.rate});if(monthCount>1200){alert("การคำนวณเกิน 100 ปี");return}}
+            const years=Math.floor(monthCount/12);const remainingMonths=monthCount%12;document.getElementById('durationResult').textContent=`${years} ปี ${remainingMonths} เดือน`;document.getElementById('monthsResult').textContent=monthCount.toLocaleString();document.getElementById('totalInterestResult').textContent=totalInterestPaid.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+            const birthDate=new Date(birthDateStr);const endDate=new Date();endDate.setMonth(endDate.getMonth()+monthCount);let ageYears=endDate.getFullYear()-birthDate.getFullYear();let ageMonths=endDate.getMonth()-birthDate.getMonth();let ageDays=endDate.getDate()-birthDate.getDate();
+            if(ageDays<0){ageMonths--;endDate.setMonth(endDate.getMonth()-1);ageDays+=new Date(endDate.getFullYear(),endDate.getMonth()+1,0).getDate()}
+            if(ageMonths<0){ageYears--;ageMonths+=12}
+            document.getElementById('ageResult').textContent=`${ageYears} ปี ${ageMonths} เดือน`;createPaymentTable(paymentSchedule);document.getElementById('result').style.display='block'
+        });
+
+        // ฟังก์ชันที่เหลือทั้งหมดเหมือนเดิม
+        function clearDataAndReset(){if(confirm('คุณต้องการล้างข้อมูลที่บันทึกไว้ทั้งหมด และรีเซ็ตฟอร์มใช่หรือไม่?')){localStorage.removeItem(STORAGE_KEY);window.location.reload()}}
+        function loadDefaultTiers(){interestTiersContainer.innerHTML='';addInterestTier(1,'',6.5)}
+        function addInterestTier(from=1,to='',rate=''){const newTier=document.createElement('div');newTier.classList.add('rate-tier');const isFirstTier=interestTiersContainer.children.length===0;newTier.innerHTML=`<div class="form-group-inline"><label>เดือนที่</label><input type="number" class="fromMonth" placeholder="ตั้งแต่" value="${from}" ${isFirstTier?'readonly':''}></div><div class="form-group-inline"><label>ถึง</label><input type="number" class="toMonth" placeholder="ตลอดไป" value="${to}"></div><div class="form-group-inline"><label>ดอกเบี้ย (%)</label><input type="number" class="rate" step="0.1" value="${rate}"></div><button type="button" class="remove-tier-btn" ${isFirstTier?'style="display:none;"':''}>×</button>`;interestTiersContainer.appendChild(newTier)}
+        document.addEventListener('DOMContentLoaded',loadDataFromLocalStorage);resetBtn.addEventListener('click',clearDataAndReset);mainForm.addEventListener('input',saveDataToLocalStorage);interestTiersContainer.addEventListener('input',saveDataToLocalStorage);addRateTierBtn.addEventListener('click',()=>{const lastTier=interestTiersContainer.querySelector('.rate-tier:last-child');if(!lastTier){addInterestTier(1);return}
+        const lastToMonth=lastTier.querySelector('.toMonth').value;if(!lastToMonth){alert('กรุณากรอก "เดือนที่ถึง" ของช่วงก่อนหน้า');return}
+        const nextFromMonth=parseInt(lastToMonth,10)+1;addInterestTier(nextFromMonth);saveDataToLocalStorage()});interestTiersContainer.addEventListener('click',e=>{if(e.target.classList.contains('remove-tier-btn')){e.target.parentElement.remove();saveDataToLocalStorage()}});
+        function createPaymentTable(schedule){const tableElem=document.getElementById('payment-table');let tableHTML=`<thead><tr><th>งวดที่</th><th>เงินที่จ่าย</th><th>ดอกเบี้ย</th><th>ตัดเงินต้น</th><th>เงินต้นคงเหลือ</th><th>ดอกเบี้ย (%)</th></tr></thead><tbody>`;schedule.forEach(row=>{tableHTML+=`<tr><td>${row.month}</td><td>${row.payment.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td>${row.interest.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td>${row.principalPaid.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td>${row.balance.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td style="text-align:center;">${row.rate.toFixed(2)}%</td></tr>`});tableHTML+=`</tbody>`;tableElem.innerHTML=tableHTML}
+    </script>
+</body>
+</html>
