@@ -5,7 +5,7 @@
   const shiftDate = (iso, n = 1) => { const [y, m, d] = iso.split("-").map(Number); const last = new Date(y, m + n, 0).getDate(); const t = new Date(y, m - 1 + n, Math.min(d, last)); return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`; };
   const today = new Date();
   let year = today.getFullYear();
-  const SDEF = { method: "flat", actual_h1: 0, actual_y: 0, ded94: 30000, ded90: 60000, paid94: null };
+  const SDEF = { method: "flat", actual_h1: 0, actual_y: 0, ded94: 30000, ded90: 60000, paid94: null, salary: 0, salary_wht: 0 };
   const S = () => Object.assign({}, SDEF, settings[year] || {});
   const isoToday = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; };
 
@@ -42,10 +42,20 @@
     const g1 = sum(h1, "amount"), w1 = sum(h1, "wht"), gY = sum(ye, "amount"), wY = sum(ye, "wht");
     const flat = s.method !== "actual";
     const e1 = flat ? g1 * 0.3 : Number(s.actual_h1) || 0, eY = flat ? gY * 0.3 : Number(s.actual_y) || 0;
-    const c1 = calc(g1, e1, Number(s.ded94) || 0), cY = calc(gY, eY, Number(s.ded90) || 0);
+    const c1 = calc(g1, e1, Number(s.ded94) || 0), cY0 = calc(gY, eY, Number(s.ded90) || 0);
+    // ภ.ง.ด.90 รวมเงินเดือน (40(1)): หักค่าใช้จ่าย 50% ไม่เกิน 100,000
+    const sal = Number(s.salary) || 0, salWht = Number(s.salary_wht) || 0, salExp = Math.min(sal * 0.5, 100000);
+    const cY = sal ? (() => {
+      const net = Math.max(0, sal - salExp + gY - eY - (Number(s.ded90) || 0));
+      let tax = progressive(net), method = "อัตราก้าวหน้า";
+      if (gY >= 120000) { const m = gY * 0.005; if (m > 5000 && m > tax) { tax = m; method = "0.5% ของเงินได้"; } }
+      return { net, tax, method };
+    })() : cY0;
+    const salOnlyTax = sal ? progressive(Math.max(0, sal - salExp - (Number(s.ded90) || 0))) : 0;
+    const rentTaxY = cY.tax - salOnlyTax;
     const due1 = Math.max(0, c1.tax - w1);
     const paid94 = s.paid94 === null || s.paid94 === "" || s.paid94 === undefined ? due1 : Number(s.paid94);
-    const dueY = cY.tax - wY - paid94, B = be(year);
+    const dueY = cY.tax - wY - salWht - paid94, B = be(year);
     $("card94").innerHTML = `
       <div class="spread"><div><div class="code">ภ.ง.ด.94</div><div class="small muted">เงินได้ ม.ค.–มิ.ย. ${B} · ยื่น 1 ก.ค.–30 ก.ย. ${B}</div></div>${chip(new Date(year, 8, 30, 23, 59), "ยังไม่ถึงกำหนด")}</div>
       <dl class="kv">
@@ -61,22 +71,25 @@
     $("card90").innerHTML = `
       <div class="spread"><div><div class="code">ภ.ง.ด.90</div><div class="small muted">เงินได้ทั้งปี ${B} · ยื่นภายใน 31 มี.ค. ${B + 1}</div></div>${chip(new Date(year + 1, 2, 31, 23, 59), "รอสิ้นปี")}</div>
       <dl class="kv">
+        ${sal ? `<dt>เงินเดือนทั้งปี</dt><dd>${fmt(sal)}</dd><dt>หักค่าใช้จ่ายเงินเดือน 50% (ไม่เกิน 1 แสน)</dt><dd>−${fmt(salExp)}</dd>` : ""}
         <dt>ค่าเช่าทั้งปี (${ye.length} รายการ)</dt><dd>${fmt(gY)}</dd>
-        <dt>หักค่าใช้จ่าย${flat ? "เหมา 30%" : "ตามจริง"}</dt><dd>−${fmt(eY)}</dd>
+        <dt>หักค่าใช้จ่ายค่าเช่า${flat ? "เหมา 30%" : "ตามจริง"}</dt><dd>−${fmt(eY)}</dd>
         <dt>หักลดหย่อน</dt><dd>−${fmt(s.ded90)}</dd><div class="sep"></div>
         <dt>เงินได้สุทธิ</dt><dd>${fmt(cY.net)}</dd>
         <dt>ภาษี (${cY.method})</dt><dd>${fmt(cY.tax)}</dd>
-        <dt>หัก ณ ที่จ่ายทั้งปี</dt><dd>−${fmt(wY)}</dd>
+        ${sal ? `<dt>นายจ้างหักไว้ (50 ทวิ)</dt><dd>−${fmt(salWht)}</dd>` : ""}
+        <dt>ผู้เช่าหัก ณ ที่จ่าย</dt><dd>−${fmt(wY)}</dd>
         <dt>จ่ายไปแล้วใน ภ.ง.ด.94</dt><dd>−${fmt(paid94)}</dd>
         <dt class="total">${dueY < 0 ? "ขอคืนภาษีโดยประมาณ" : "ต้องชำระเพิ่มโดยประมาณ"}</dt><dd class="total">${fmt(Math.abs(dueY))}</dd>
       </dl>
+      ${sal ? `<p class="small" style="margin:0">ภาษีที่เพิ่มขึ้นเพราะค่าเช่า ≈ <b>${fmt(rentTaxY)}</b> บาท/ปี (เดือนละ ≈ ${fmt0(rentTaxY / 12)})</p>` : `<p class="small muted" style="margin:0">ยังไม่รวมเงินเดือน ใส่เงินเดือนทั้งปีในส่วนตั้งค่าเพื่อประมาณการให้ใกล้จริง</p>`}
       <p class="small muted" style="margin:0">ยื่นออนไลน์ efiling.rd.go.th มักได้ขยายเวลาเพิ่ม ตรวจวันที่ประกาศของปีนั้น</p>`;
     // ผลคำนวณสดใต้ส่วนตั้งค่า
     $("sActualH1").placeholder = flat ? `เหมา 30% = ${fmt(e1)}` : "0.00";
     $("sActualY").placeholder = flat ? `เหมา 30% = ${fmt(eY)}` : "0.00";
     $("sResult").innerHTML = `
       <div class="save"><div class="small">ภ.ง.ด.94 · เงินได้สุทธิ ${fmt(c1.net)}</div><div class="big">${fmt(due1)} ฿</div><div class="small muted">ภาษีที่ต้องชำระ (หักค่าใช้จ่าย ${fmt(e1)})</div></div>
-      <div class="save"><div class="small">ภ.ง.ด.90 · เงินได้สุทธิ ${fmt(cY.net)}</div><div class="big" style="${dueY < 0 ? "" : "color:var(--bad)"}">${fmt(Math.abs(dueY))} ฿</div><div class="small muted">${dueY < 0 ? "ได้คืนโดยประมาณ" : "ต้องชำระเพิ่มโดยประมาณ"} (หักค่าใช้จ่าย ${fmt(eY)})</div></div>
+      <div class="save"><div class="small">ภ.ง.ด.90${sal ? " (รวมเงินเดือน)" : ""} · เงินได้สุทธิ ${fmt(cY.net)}</div><div class="big" style="${dueY < 0 ? "" : "color:var(--bad)"}">${fmt(Math.abs(dueY))} ฿</div><div class="small muted">${dueY < 0 ? "ได้คืนโดยประมาณ" : "ต้องชำระเพิ่มโดยประมาณ"} (หักค่าใช้จ่าย ${fmt(eY)})</div></div>
       ${gY ? "" : `<div class="save" style="background:var(--soft)"><div class="small">ยังไม่มีรายรับปี ${B}</div><div class="small muted">บันทึกการรับเงินก่อน ตัวเลขภาษีจะคำนวณให้ทันที</div></div>`}`;
   }
   function renderMonths() {
@@ -115,7 +128,7 @@
     const s = S();
     $("sFlat").checked = s.method !== "actual"; $("sActual").checked = s.method === "actual";
     $("sActualH1").value = Number(s.actual_h1) || ""; $("sActualY").value = Number(s.actual_y) || "";
-    $("sDed94").value = s.ded94; $("sDed90").value = s.ded90;
+    $("sDed94").value = s.ded94; $("sDed90").value = s.ded90; $("sSalary").value = Number(s.salary) || ""; $("sSalaryWht").value = Number(s.salary_wht) || "";
     $("sPaid94").value = s.paid94 === null || s.paid94 === undefined ? "" : s.paid94;
     $("sActualH1").disabled = $("sActualY").disabled = s.method !== "actual";
   }
@@ -212,12 +225,12 @@
     sTimer = setTimeout(async () => {
       const s = settings[year];
       const { error } = await db.from("rent_settings").upsert({ user_id: user.id, tax_year: year, method: s.method, actual_h1: Number(s.actual_h1) || 0,
-        actual_y: Number(s.actual_y) || 0, ded94: Number(s.ded94) || 0, ded90: Number(s.ded90) || 0, paid94: s.paid94, updated_at: new Date().toISOString() });
-      $("sState").textContent = error ? "· บันทึกไม่สำเร็จ: " + dbErr(error) : "· บันทึกแล้ว";
+        actual_y: Number(s.actual_y) || 0, ded94: Number(s.ded94) || 0, ded90: Number(s.ded90) || 0, paid94: s.paid94, salary: Number(s.salary) || 0, salary_wht: Number(s.salary_wht) || 0, updated_at: new Date().toISOString() });
+      $("sState").textContent = error ? (/salary/.test(dbErr(error)) ? "· บันทึกไม่สำเร็จ: ยังไม่ได้รัน SQL เพิ่มคอลัมน์เงินเดือน" : "· บันทึกไม่สำเร็จ: " + dbErr(error)) : "· บันทึกแล้ว";
     }, 700);
   }
   document.querySelectorAll('input[name="expMethod"]').forEach(r => r.addEventListener("change", () => updSetting({ method: $("sActual").checked ? "actual" : "flat" })));
-  [["sActualH1", "actual_h1"], ["sActualY", "actual_y"], ["sDed94", "ded94"], ["sDed90", "ded90"]]
+  [["sActualH1", "actual_h1"], ["sActualY", "actual_y"], ["sDed94", "ded94"], ["sDed90", "ded90"], ["sSalary", "salary"], ["sSalaryWht", "salary_wht"]]
     .forEach(([el, k]) => $(el).addEventListener("input", () => updSetting({ [k]: Number($(el).value) || 0 })));
   $("sPaid94").addEventListener("input", () => updSetting({ paid94: $("sPaid94").value === "" ? null : Number($("sPaid94").value) }));
 

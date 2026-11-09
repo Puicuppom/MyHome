@@ -36,9 +36,16 @@ create table if not exists public.rent_settings (
   ded94      numeric(14,2) not null default 30000,
   ded90      numeric(14,2) not null default 60000,
   paid94     numeric(14,2),          -- null = ใช้ค่าประมาณ
+  salary     numeric(14,2) not null default 0,   -- เงินเดือนทั้งปี (ประมาณการ 90)
+  salary_wht numeric(14,2) not null default 0,   -- ภาษีที่นายจ้างหักไว้
   updated_at timestamptz not null default now(),
   primary key (user_id, tax_year)
 );
+
+-- (ถ้าเคยสร้างตารางไว้แล้วก่อนมีเงินเดือน)
+alter table public.rent_settings
+  add column if not exists salary     numeric(14,2) not null default 0,
+  add column if not exists salary_wht numeric(14,2) not null default 0;
 
 -- RLS
 alter table public.loan_profiles enable row level security;
