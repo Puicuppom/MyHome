@@ -7,11 +7,6 @@
   --radius:12px; --font:'Sarabun',system-ui,sans-serif;
   color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#12141d; --card:#1b1e2a; --ink:#e6e8f2; --muted:#9aa0b8; --line:#2c3042; --soft:#232738;
-  --primary:#8b94f2; --primary-ink:#12141d; --primary-soft:#272b48;
-  --good:#5cc995; --good-soft:#1c3328; --bad:#f08a76; --bad-soft:#3a2420; --warn:#e2b45a;
-  --base-line:#6b7190; color-scheme:dark}}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;

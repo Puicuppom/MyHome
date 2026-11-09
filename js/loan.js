@@ -195,7 +195,6 @@
   seg($("chInt"), $("chBal"), () => { chartMode = "int"; drawChart(); });
   seg($("tblYear"), $("tblMonth"), () => { tableMode = "year"; drawTable(); });
   seg($("tblMonth"), $("tblYear"), () => { tableMode = "month"; drawTable(); });
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", drawChart);
 
   // ---------- init ----------
   async function init(u) {

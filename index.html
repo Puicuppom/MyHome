@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>MyHome</title>
   <meta name="theme-color" content="#4f5bd5">
+  <meta name="color-scheme" content="light">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="MyHome">
@@ -13,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=2">
+  <link rel="stylesheet" href="css/app.css?v=3">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
@@ -117,7 +118,7 @@
     </section>
 
     <section class="card">
-      <h2 id="rFormTitle">บันทึกการรับเงิน</h2>
+      <div class="spread"><h2 id="rFormTitle">บันทึกการรับเงิน</h2><button type="button" class="btn-ghost btn-sm" id="rCopyLast" title="ใช้ข้อมูลรายการล่าสุด (ของบ้านที่เลือก) เป็นเดือนถัดไป">คัดลอกรายการล่าสุด</button></div>
       <form id="rForm" autocomplete="off">
         <div class="grid" style="margin-top:12px">
           <div><label class="lbl" for="fDate">วันที่ได้รับเงิน</label><input type="date" id="fDate" required></div>
@@ -165,9 +166,9 @@
   </main>
 </div>
 
-<script src="js/core.js?v=2"></script>
-<script src="js/loan.js?v=2"></script>
-<script src="js/rent.js?v=2"></script>
+<script src="js/core.js?v=3"></script>
+<script src="js/loan.js?v=3"></script>
+<script src="js/rent.js?v=3"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));

@@ -1,6 +1,6 @@
 // network-first สำหรับไฟล์ของแอป (อัปเดตเห็นทันที), ไม่แคชคำขอ Supabase
-const CACHE = 'myhome-v2';
-const ASSETS = ['./', './index.html', './css/app.css?v=2', './js/core.js?v=2', './js/loan.js?v=2', './js/rent.js?v=2', './manifest.json'];
+const CACHE = 'myhome-v3';
+const ASSETS = ['./', './index.html', './css/app.css?v=3', './js/core.js?v=3', './js/loan.js?v=3', './js/rent.js?v=3', './manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
