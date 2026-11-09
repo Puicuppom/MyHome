@@ -95,17 +95,19 @@
     if (plan.error) { $("loanResult").hidden = true; $("loanErr").textContent = plan.error; return; }
     $("loanResult").hidden = false;
     $("scnPlan").innerHTML = kv(plan, d.birthDate);
+    const now = new Date(), nowM = now.getFullYear() * 12 + now.getMonth();
+    const left = plan.rows.filter(r => r.date.getFullYear() * 12 + r.date.getMonth() >= nowM).length;
+    const leftCard = `<div class="save" style="background:var(--primary-soft)"><div class="small">เหลือเวลาผ่อน (นับจากเดือนนี้)</div><div class="big" style="color:var(--primary)">${left ? dur(left) : "ผ่อนหมดแล้ว"}</div><div class="small muted">อีก ${fmt0(left)} งวด · หมด ${monthLabel(plan.end)}</div></div>`;
     if (base.error) {
       $("scnBase").innerHTML = `<dt>ผล</dt><dd style="color:var(--bad);white-space:normal;text-align:right">${esc(base.error)}</dd>`;
-      $("savings").innerHTML = `<div class="save"><div class="small">ถ้าไม่โปะ</div><div class="big" style="color:var(--bad)">ผ่อนไม่หมด</div><div class="small muted">ค่างวดปกติไม่พอจ่ายดอกเบี้ย</div></div>`;
+      $("savings").innerHTML = `<div class="save"><div class="small">ถ้าไม่โปะ</div><div class="big" style="color:var(--bad)">ผ่อนไม่หมด</div><div class="small muted">ค่างวดปกติไม่พอจ่ายดอกเบี้ย</div></div>${leftCard}`;
     } else {
       $("scnBase").innerHTML = kv(base, d.birthDate);
       const sm = base.months - plan.months, si = base.totalInt - plan.totalInt;
-      const extraTotal = plan.rows.reduce((a, r) => a + r.lump, 0) + d.extraPayment * plan.months;
       $("savings").innerHTML = `
         <div class="save"><div class="small">ประหยัดดอกเบี้ย</div><div class="big">${fmt0(si)} ฿</div><div class="small muted">${base.totalInt ? ((si / base.totalInt) * 100).toFixed(1) : 0}% ของดอกเบี้ยทั้งหมด</div></div>
         <div class="save"><div class="small">ผ่อนหมดเร็วขึ้น</div><div class="big">${dur(sm)}</div><div class="small muted">${monthLabel(base.end)} → ${monthLabel(plan.end)}</div></div>
-        <div class="save"><div class="small">ทุกเงินโปะ 1 บาท</div><div class="big">${extraTotal > 0 ? (si / extraTotal).toFixed(2) : "0.00"} ฿</div><div class="small muted">ดอกเบี้ยที่ประหยัดได้ต่อเงินโปะ</div></div>`;
+${leftCard}`;
     }
     last = { base: base.error ? null : base, plan };
     drawChart(); drawTable();
