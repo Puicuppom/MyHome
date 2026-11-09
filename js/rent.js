@@ -71,6 +71,13 @@
         <dt class="total">${dueY < 0 ? "ขอคืนภาษีโดยประมาณ" : "ต้องชำระเพิ่มโดยประมาณ"}</dt><dd class="total">${fmt(Math.abs(dueY))}</dd>
       </dl>
       <p class="small muted" style="margin:0">ยื่นออนไลน์ efiling.rd.go.th มักได้ขยายเวลาเพิ่ม ตรวจวันที่ประกาศของปีนั้น</p>`;
+    // ผลคำนวณสดใต้ส่วนตั้งค่า
+    $("sActualH1").placeholder = flat ? `เหมา 30% = ${fmt(e1)}` : "0.00";
+    $("sActualY").placeholder = flat ? `เหมา 30% = ${fmt(eY)}` : "0.00";
+    $("sResult").innerHTML = `
+      <div class="save"><div class="small">ภ.ง.ด.94 · เงินได้สุทธิ ${fmt(c1.net)}</div><div class="big">${fmt(due1)} ฿</div><div class="small muted">ภาษีที่ต้องชำระ (หักค่าใช้จ่าย ${fmt(e1)})</div></div>
+      <div class="save"><div class="small">ภ.ง.ด.90 · เงินได้สุทธิ ${fmt(cY.net)}</div><div class="big" style="${dueY < 0 ? "" : "color:var(--bad)"}">${fmt(Math.abs(dueY))} ฿</div><div class="small muted">${dueY < 0 ? "ได้คืนโดยประมาณ" : "ต้องชำระเพิ่มโดยประมาณ"} (หักค่าใช้จ่าย ${fmt(eY)})</div></div>
+      ${gY ? "" : `<div class="save" style="background:var(--soft)"><div class="small">ยังไม่มีรายรับปี ${B}</div><div class="small muted">บันทึกการรับเงินก่อน ตัวเลขภาษีจะคำนวณให้ทันที</div></div>`}`;
   }
   function renderMonths() {
     const sums = Array(12).fill(0); yearEntries().forEach(e => sums[Number(e.received_date.slice(5, 7)) - 1] += Number(e.amount) || 0);
