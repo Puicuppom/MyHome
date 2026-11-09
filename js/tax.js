@@ -1,7 +1,7 @@
 // Tax: ที่เก็บข้อมูลร่วม (ค่าเช่า + เงินได้ + ลดหย่อน) และเครื่องคำนวณภาษี ภ.ง.ด.94 / 90
 const Tax = (function () {
   const today = new Date();
-  const st = { year: today.getFullYear(), rent: [], settings: {}, income: [], deductions: [], loaded: false, errors: [] };
+  const st = { year: today.getFullYear(), rent: [], settings: {}, income: [], deductions: [], estimates: {}, loaded: false, errors: [] };
   const subs = new Set();
   let loading = null;
 
@@ -52,14 +52,18 @@ const Tax = (function () {
     const flat = s.method !== "actual";
 
     // ----- เงินได้ -----
-    const i1 = sum(inc.filter(e => e.type === "salary" || e.type === "bonus"), "amount");
+    // ประมาณการทั้งปี (ถ้ากรอก) ใช้แทนเงินเดือน/โบนัสรายการย่อย
+    const est = st.estimates[year], usingEst = !!(est && Number(est.salary) > 0);
+    const is40_1 = e => e.type === "salary" || e.type === "bonus";
+    const incUsed = usingEst ? inc.filter(e => !is40_1(e)) : inc;
+    const i1 = usingEst ? Number(est.salary) : sum(inc.filter(is40_1), "amount");
     const i2 = sum(inc.filter(e => e.type === "40_2"), "amount");
     const iO = sum(inc.filter(e => e.type === "other"), "amount");
     const g1 = sum(rentH1, "amount"), gY = sum(rent, "amount");
     const e1 = flat ? g1 * 0.3 : Number(s.actual_h1) || 0, eY = flat ? gY * 0.3 : Number(s.actual_y) || 0;
     const exp12 = Math.min((i1 + i2) * 0.5, 100000);
     const totalIncome = i1 + i2 + iO + gY;
-    const ssoSlip = sum(inc, "sso");
+    const ssoSlip = usingEst ? Number(est.sso) || 0 : sum(inc, "sso");
 
     // ----- ลดหย่อน -----
     const byCat = {}; ded.forEach(d => { byCat[d.category] = (byCat[d.category] || 0) + (Number(d.amount) || 0); });
@@ -89,7 +93,7 @@ const Tax = (function () {
     const net90 = Math.max(0, totalIncome - exp12 - eY - dedTotal);
     const t90 = minTax(net90);
     const noRent = progressive(Math.max(0, i1 + i2 + iO - exp12 - dedTotal));
-    const whtInc = sum(inc, "wht"), whtRent = sum(rent, "wht"), whtRentH1 = sum(rentH1, "wht");
+    const whtInc = sum(incUsed, "wht") + (usingEst ? Number(est.wht) || 0 : 0), whtRent = sum(rent, "wht"), whtRentH1 = sum(rentH1, "wht");
 
     // ----- ภ.ง.ด.94 (ค่าเช่าครึ่งปีแรก) ลดหย่อนครึ่งหนึ่งของส่วนตัว/ครอบครัว -----
     const ded94 = 30000 + (allow.spouse + allow.child + allow.parent + allow.disabled) / 2;
@@ -100,7 +104,7 @@ const Tax = (function () {
     const paid94 = s.paid94 === null || s.paid94 === undefined || s.paid94 === "" ? due94 : Number(s.paid94);
     const due90 = t90.tax - whtInc - whtRent - paid94;
 
-    return { year, s, flat, rent, rentH1, inc, ded, byCat, allow, ssoSlip,
+    return { year, s, flat, usingEst, est, rent, rentH1, inc, ded, byCat, allow, ssoSlip,
       i1, i2, iO, g1, gY, e1, eY, exp12, totalIncome, dedTotal,
       h1: { count: rentH1.length, net: net94, tax: tax94, method: m94, wht: whtRentH1, due: due94, ded: ded94 },
       y: { net: net90, tax: t90.tax, method: t90.method, whtInc, whtRent, paid94, due: due90, rentTax: t90.tax - noRent } };
@@ -133,7 +137,7 @@ const Tax = (function () {
     <article class="card taxcard">
       <div class="spread"><div><div class="code">ภ.ง.ด.90</div><div class="small muted">เงินได้ทั้งปี ${B} · ยื่นภายใน 31 มี.ค. ${B + 1}</div></div>${chip(new Date(year + 1, 2, 31, 23, 59), "รอสิ้นปี")}</div>
       <dl class="kv">
-        ${c.i1 ? line("เงินเดือน / โบนัส 40(1)", fmt(c.i1)) : ""}
+        ${c.i1 ? line(`เงินเดือน / โบนัส 40(1)${c.usingEst ? " (ประมาณการ)" : ""}`, fmt(c.i1)) : ""}
         ${c.i2 ? line("ค่าจ้าง / ฟรีแลนซ์ 40(2)", fmt(c.i2)) : ""}
         ${c.i1 + c.i2 ? line("หักค่าใช้จ่าย 50% (ไม่เกิน 1 แสน)", "−" + fmt(c.exp12)) : ""}
         ${line("ค่าเช่า 40(5)", fmt(c.gY))}
@@ -168,21 +172,23 @@ const Tax = (function () {
   async function load() {
     if (loading) return loading;
     loading = (async () => {
-      const [r, s, i, d] = await Promise.all([
+      const [r, s, i, d, e] = await Promise.all([
         db.from("rent_entries").select("*").order("received_date"),
         db.from("rent_settings").select("*"),
         db.from("income_entries").select("*").order("received_date"),
-        db.from("deduction_items").select("*").order("created_at")
+        db.from("deduction_items").select("*").order("created_at"),
+        db.from("income_estimates").select("*")
       ]);
-      st.errors = [r, s, i, d].filter(x => x.error).map(x => dbErr(x.error));
+      st.errors = [r, s, i, d, e].filter(x => x.error).map(x => dbErr(x.error));
       if (st.errors.length) banner("โหลดข้อมูลบางส่วนไม่ได้: " + st.errors[0] + " (รัน SQL ใน supabase/ ครบแล้วหรือยัง?)");
       st.rent = r.data || []; st.income = i.data || []; st.deductions = d.data || [];
+      st.estimates = {}; (e.data || []).forEach(x => st.estimates[x.tax_year] = x);
       st.settings = {}; (s.data || []).forEach(x => st.settings[x.tax_year] = x);
       st.loaded = true; emit();
     })();
     return loading;
   }
-  function reset() { loading = null; st.loaded = false; st.rent = []; st.income = []; st.deductions = []; st.settings = {}; }
+  function reset() { loading = null; st.loaded = false; st.rent = []; st.income = []; st.deductions = []; st.settings = {}; st.estimates = {}; }
 
   // อัปเดตรายการในหน่วยความจำ แล้วแจ้งทุกแท็บ
   function upsertLocal(list, row) { const a = st[list], i = a.findIndex(x => x.id === row.id); if (i >= 0) a[i] = row; else a.push(row); emit(); }

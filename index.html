@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=9">
+  <link rel="stylesheet" href="css/app.css?v=10">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
@@ -108,7 +108,25 @@
     </section>
     <section class="forms taxsum"></section>
     <section class="card">
-      <div class="spread"><h2 id="iFormTitle">บันทึกเงินได้</h2><button type="button" class="btn-ghost btn-sm" id="iCopyLast" title="คัดลอกรายการล่าสุดของประเภทที่เลือกเป็นเดือนถัดไป">คัดลอกรายการล่าสุด</button></div>
+      <div class="spread"><h2>ประมาณการเงินได้ทั้งปี</h2><span class="small muted" id="eState"></span></div>
+      <p class="small muted" style="margin:4px 0 0">กรอกยอดทั้งปีเพื่อวางแผนได้เลย ใช้แทนรายการเงินเดือน/โบนัสด้านล่าง · เว้นว่างถ้าจะบันทึกทีละเดือน</p>
+      <div class="grid" style="margin-top:12px">
+        <div><label class="lbl" for="eSalary">เงินเดือน + โบนัส ทั้งปี (คาดการณ์)</label><input type="text" inputmode="numeric" id="eSalary" class="num money"></div>
+        <div><label class="lbl" for="eWht">ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี</label><input type="text" inputmode="numeric" id="eWht" class="num money" placeholder="ดูจากสลิป × 12"></div>
+        <div><label class="lbl" for="eSso">ประกันสังคมทั้งปี</label><input type="text" inputmode="numeric" id="eSso" class="num money" placeholder="ดูจากสลิป × 12"></div>
+      </div>
+      <details style="margin-top:12px"><summary class="small">ช่วยคำนวณจากรายเดือน</summary>
+        <div class="grid" style="margin-top:10px">
+          <div><label class="lbl" for="eMonthly">เงินเดือนต่อเดือน</label><input type="text" inputmode="numeric" id="eMonthly" class="num money"></div>
+          <div><label class="lbl" for="eBonus">โบนัส / อื่น ๆ ทั้งปี</label><input type="text" inputmode="numeric" id="eBonus" class="num money"></div>
+          <div><label class="lbl" for="eWhtM">ภาษีที่ถูกหักต่อเดือน</label><input type="text" inputmode="numeric" id="eWhtM" class="num money"></div>
+          <div><label class="lbl" for="eSsoM">ประกันสังคมต่อเดือน</label><input type="text" inputmode="numeric" id="eSsoM" class="num money"></div>
+        </div>
+        <div class="row" style="margin-top:10px"><button type="button" class="btn-ghost btn-sm" id="eFill">ใส่ยอดทั้งปี (× 12)</button></div>
+      </details>
+    </section>
+    <section class="card">
+      <div class="spread"><h2 id="iFormTitle">บันทึกเงินได้รายการละเอียด</h2><button type="button" class="btn-ghost btn-sm" id="iCopyLast" title="คัดลอกรายการล่าสุดของประเภทที่เลือกเป็นเดือนถัดไป">คัดลอกรายการล่าสุด</button></div>
       <form id="iForm" autocomplete="off">
         <div class="grid" style="margin-top:12px">
           <div><label class="lbl" for="iDate">วันที่ได้รับ</label><input type="date" id="iDate" required></div>
@@ -127,7 +145,7 @@
         </div>
       </form>
     </section>
-    <section class="card"><h2>สรุปเงินได้ทั้งปี</h2><dl class="kv" id="iSummary"></dl></section>
+    <section class="card"><h2>สรุปเงินได้ทั้งปี</h2><p class="small" id="iEstNote" hidden style="margin:4px 0 0;color:var(--warn)">ใช้ยอดประมาณการทั้งปี · รายการเงินเดือน/โบนัสด้านล่างไม่ถูกนับ (ลบยอดประมาณการเพื่อใช้รายการจริง)</p><dl class="kv" id="iSummary"></dl></section>
     <section class="card">
       <h2>รายการเงินได้</h2>
       <div class="tablebox"><table>
@@ -236,12 +254,12 @@
   </main>
 </div>
 
-<script src="js/core.js?v=9"></script>
-<script src="js/tax.js?v=9"></script>
-<script src="js/loan.js?v=9"></script>
-<script src="js/income.js?v=9"></script>
-<script src="js/rent.js?v=9"></script>
-<script src="js/deduct.js?v=9"></script>
+<script src="js/core.js?v=10"></script>
+<script src="js/tax.js?v=10"></script>
+<script src="js/loan.js?v=10"></script>
+<script src="js/income.js?v=10"></script>
+<script src="js/rent.js?v=10"></script>
+<script src="js/deduct.js?v=10"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
