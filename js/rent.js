@@ -134,7 +134,7 @@
   }
 
   function resetForm() {
-    editingId = null; $("rForm").reset(); $("fDate").value = isoToday(); $("fForMonth").value = isoToday().slice(0, 7); monthTouched = false;
+    editingId = null; $("rForm").reset(); $("fDate").value = isoToday(); $("fForMonth").value = isoToday().slice(0, 7); monthTouched = false; lastDate = $("fDate").value;
     $("rFormTitle").textContent = "บันทึกการรับเงิน"; $("rSave").textContent = "บันทึก"; $("rCancel").hidden = true;
   }
 
@@ -160,13 +160,16 @@
   $("rCancel").addEventListener("click", resetForm);
   $("fWht5").addEventListener("click", () => { const a = Number($("fAmount").value) || 0; $("fWht").value = a ? (Math.round(a * 5) / 100).toFixed(2) : ""; });
   // ค่าเช่าของเดือน: ตามวันที่รับเงินอัตโนมัติ จนกว่าจะแก้เอง
-  ["input", "change"].forEach(ev => $("fDate").addEventListener(ev, () => { const d = $("fDate").value; if (d && !monthTouched) $("fForMonth").value = d.slice(0, 7); }));
+  // เปลี่ยนวันที่รับเงินเมื่อไหร่ → ค่าเช่าของเดือนเปลี่ยนตามทันที (แก้เดือนเองทีหลังได้)
+  let lastDate = "";
+  const syncMonth = () => { const d = $("fDate").value; if (d && d !== lastDate) { lastDate = d; $("fForMonth").value = d.slice(0, 7); } };
+  ["input", "change", "blur"].forEach(ev => $("fDate").addEventListener(ev, syncMonth));
   $("fForMonth").addEventListener("input", () => { monthTouched = !!$("fForMonth").value; });
 
   function copyFrom(e) {
     resetForm();
     const date = shiftDate(e.received_date, 1);
-    $("fDate").value = date; $("fAmount").value = e.amount; $("fProperty").value = e.property || ""; $("fTenant").value = e.tenant || "";
+    $("fDate").value = date; lastDate = date; $("fAmount").value = e.amount; $("fProperty").value = e.property || ""; $("fTenant").value = e.tenant || "";
     $("fMethod").value = e.method || "โอนเข้าบัญชี"; $("fWht").value = Number(e.wht) || ""; $("fNote").value = e.note || "";
     $("fForMonth").value = e.for_month ? nextYM(e.for_month) : date.slice(0, 7); monthTouched = true;
     $("rMsg").className = "msg"; $("rMsg").textContent = "คัดลอกแล้ว ตรวจวันที่แล้วกดบันทึก";
@@ -186,7 +189,7 @@
     if (cp) { const e = entries.find(x => x.id === cp.dataset.copy); if (e) copyFrom(e); return; }
     if (ed) {
       const e = entries.find(x => x.id === ed.dataset.edit); if (!e) return; editingId = e.id;
-      $("fDate").value = e.received_date; $("fAmount").value = e.amount; $("fForMonth").value = e.for_month || ""; $("fProperty").value = e.property || "";
+      $("fDate").value = e.received_date; lastDate = e.received_date; $("fAmount").value = e.amount; $("fForMonth").value = e.for_month || ""; $("fProperty").value = e.property || "";
       monthTouched = true; $("fTenant").value = e.tenant || ""; $("fMethod").value = e.method || "โอนเข้าบัญชี"; $("fWht").value = Number(e.wht) || ""; $("fNote").value = e.note || "";
       $("rFormTitle").textContent = "แก้ไขรายการ"; $("rSave").textContent = "บันทึกการแก้ไข"; $("rCancel").hidden = false;
       $("rForm").scrollIntoView({ behavior: "smooth", block: "center" }); $("fAmount").focus();
