@@ -13,7 +13,7 @@
     const y = Tax.st.year, c = Tax.compute(y), items = c.ded;
     $("dTotal").textContent = fmt(c.dedTotal);
     let h = `<tr class="sub"><td class="l">ส่วนตัว</td><td class="l small">อัตโนมัติ</td><td class="num">60,000.00</td><td class="num">60,000.00</td><td></td></tr>`;
-    if (c.ssoSlip) h += `<tr><td class="l">ประกันสังคม</td><td class="l small">จากสลิปในแท็บเงินได้</td><td class="num">${fmt(c.ssoSlip)}</td><td class="num">${fmt(c.ssoSlip)}</td><td></td></tr>`;
+    if (c.ssoSlip) h += `<tr><td class="l">ประกันสังคม</td><td class="l small">จากแท็บเงินได้</td><td class="num">${fmt(c.ssoSlip)}</td><td class="num">${fmt(c.ssoSlip)}</td><td></td></tr>`;
     const cats = Object.keys(D).filter(k => items.some(d => d.category === k));
     cats.forEach(k => {
       const list = items.filter(d => d.category === k), raw = list.reduce((a, d) => a + +d.amount, 0);

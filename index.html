@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=10">
+  <link rel="stylesheet" href="css/app.css?v=11">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
@@ -109,7 +109,7 @@
     <section class="forms taxsum"></section>
     <section class="card">
       <div class="spread"><h2>ประมาณการเงินได้ทั้งปี</h2><span class="small muted" id="eState"></span></div>
-      <p class="small muted" style="margin:4px 0 0">กรอกยอดทั้งปีเพื่อวางแผนได้เลย ใช้แทนรายการเงินเดือน/โบนัสด้านล่าง · เว้นว่างถ้าจะบันทึกทีละเดือน</p>
+      <p class="small muted" style="margin:4px 0 0">กรอกยอดทั้งปีเพื่อวางแผนได้เลย ภาษีที่ถูกหักนับเป็นเครดิตภาษี ประกันสังคมนับเป็นลดหย่อนให้อัตโนมัติ</p>
       <div class="grid" style="margin-top:12px">
         <div><label class="lbl" for="eSalary">เงินเดือน + โบนัส ทั้งปี (คาดการณ์)</label><input type="text" inputmode="numeric" id="eSalary" class="num money"></div>
         <div><label class="lbl" for="eWht">ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี</label><input type="text" inputmode="numeric" id="eWht" class="num money" placeholder="ดูจากสลิป × 12"></div>
@@ -125,33 +125,9 @@
         <div class="row" style="margin-top:10px"><button type="button" class="btn-ghost btn-sm" id="eFill">ใส่ยอดทั้งปี (× 12)</button></div>
       </details>
     </section>
-    <section class="card">
-      <div class="spread"><h2 id="iFormTitle">บันทึกเงินได้รายการละเอียด</h2><button type="button" class="btn-ghost btn-sm" id="iCopyLast" title="คัดลอกรายการล่าสุดของประเภทที่เลือกเป็นเดือนถัดไป">คัดลอกรายการล่าสุด</button></div>
-      <form id="iForm" autocomplete="off">
-        <div class="grid" style="margin-top:12px">
-          <div><label class="lbl" for="iDate">วันที่ได้รับ</label><input type="date" id="iDate" required></div>
-          <div><label class="lbl" for="iType">ประเภท</label><select id="iType"></select></div>
-          <div><label class="lbl" for="iPayer">ผู้จ่าย / นายจ้าง</label><input id="iPayer" list="iPayerList"><datalist id="iPayerList"></datalist></div>
-          <div><label class="lbl" for="iAmount">จำนวนเงิน (ก่อนหัก)</label><input type="number" id="iAmount" min="0.01" step="0.01" inputmode="decimal" required></div>
-          <div><label class="lbl" for="iWht">ภาษีหัก ณ ที่จ่าย</label><input type="number" id="iWht" min="0" step="0.01" inputmode="decimal" placeholder="0"></div>
-          <div id="iSsoWrap"><label class="lbl" for="iSso">ประกันสังคมที่ถูกหัก</label><input type="number" id="iSso" min="0" step="0.01" inputmode="decimal" placeholder="0"></div>
-          <div class="full"><label class="lbl" for="iNote">หมายเหตุ</label><input id="iNote"></div>
-        </div>
-        <div class="row" style="margin-top:14px">
-          <button type="submit" class="btn-primary" id="iSave">บันทึก</button>
-          <label class="row small" id="iRepeatWrap" style="gap:6px"><input type="checkbox" id="iRepeat" style="width:auto"> ทำซ้ำทุกเดือนจนถึง ธ.ค.</label>
-          <button type="button" class="btn-ghost" id="iCancel" hidden>ยกเลิกการแก้ไข</button>
-          <span class="msg" id="iMsg" role="status"></span>
-        </div>
-      </form>
-    </section>
-    <section class="card"><h2>สรุปเงินได้ทั้งปี</h2><p class="small" id="iEstNote" hidden style="margin:4px 0 0;color:var(--warn)">ใช้ยอดประมาณการทั้งปี · รายการเงินเดือน/โบนัสด้านล่างไม่ถูกนับ (ลบยอดประมาณการเพื่อใช้รายการจริง)</p><dl class="kv" id="iSummary"></dl></section>
-    <section class="card">
-      <h2>รายการเงินได้</h2>
-      <div class="tablebox"><table>
-        <thead><tr><th class="l">วันที่</th><th class="l">ประเภท / ผู้จ่าย</th><th>จำนวนเงิน</th><th>หัก ณ ที่จ่าย</th><th>ประกันสังคม</th><th class="l">หมายเหตุ</th><th></th></tr></thead>
-        <tbody id="iBody"></tbody></table></div>
-    </section>
+    
+    <section class="card"><h2>สรุปเงินได้ทั้งปี</h2><dl class="kv" id="iSummary"></dl></section>
+    
   </main>
 
   <!-- ---------- DEDUCT ---------- -->
@@ -254,12 +230,12 @@
   </main>
 </div>
 
-<script src="js/core.js?v=10"></script>
-<script src="js/tax.js?v=10"></script>
-<script src="js/loan.js?v=10"></script>
-<script src="js/income.js?v=10"></script>
-<script src="js/rent.js?v=10"></script>
-<script src="js/deduct.js?v=10"></script>
+<script src="js/core.js?v=11"></script>
+<script src="js/tax.js?v=11"></script>
+<script src="js/loan.js?v=11"></script>
+<script src="js/income.js?v=11"></script>
+<script src="js/rent.js?v=11"></script>
+<script src="js/deduct.js?v=11"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
