@@ -222,4 +222,19 @@
     if (migrated && loaded) scheduleSave();
   }
   App.modules.loan = { init, show: () => chart && chart.resize() };
+  // ดอกเบี้ยตามแผน (ผ่อน + โปะ) ในปีปฏิทิน — ใช้ในแท็บลดหย่อน
+  App.loanYearInterest = async year => {
+    let plan = last && last.plan;
+    if (!plan) {
+      const { data } = await db.from("loan_profiles").select("data").eq("user_id", App.user.id).maybeSingle();
+      if (!data || !data.data) return null;
+      const d = Object.assign({}, DEFAULTS, data.data);
+      d.loanAmount = num(d.loanAmount); d.monthlyPayment = num(d.monthlyPayment); d.extraPayment = num(d.extraPayment);
+      d.startMonth = d.startMonth || thisMonth(); d.lumps = (d.lumps || []).map(l => ({ month: l.month, amount: num(l.amount) }));
+      plan = simulate(d, true);
+    }
+    if (!plan || plan.error) return null;
+    const rows = plan.rows.filter(r => r.date.getFullYear() === year);
+    return { interest: rows.reduce((a, r) => a + r.interest, 0), months: rows.length };
+  };
 })();

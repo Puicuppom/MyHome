@@ -13,6 +13,12 @@ const thDate = iso => { if (!iso) return ""; const [y,m,d] = iso.split("-").map(
 const thMonth = ym => { if (!ym) return ""; const [y,m] = ym.split("-").map(Number); return `${TH_M[m-1]} ${be(y)}`; };
 const dbErr = e => (e && (e.message || e.code)) || "ไม่ทราบสาเหตุ";
 
+function downloadCSV(name, lines) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" }));
+  a.download = name; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
 function banner(msg) { const b = $("appBanner"); b.hidden = !msg; b.textContent = msg || ""; }
 
 const App = {
@@ -20,10 +26,12 @@ const App = {
   modules: {},           // name -> { init(user), show() }
   started: new Set(),
   route() {
-    const name = location.hash === "#rent" ? "rent" : "loan";
-    $("loanView").hidden = name !== "loan";
-    $("rentView").hidden = name !== "rent";
-    [["loan", "tabLoan"], ["rent", "tabRent"]].forEach(([n, id]) => n === name ? $(id).setAttribute("aria-current", "page") : $(id).removeAttribute("aria-current"));
+    const views = ["loan", "income", "rent", "deduct"];
+    const h = location.hash.slice(1), name = views.includes(h) ? h : "loan";
+    views.forEach(v => {
+      $(v + "View").hidden = v !== name;
+      const t = document.querySelector(`.tabs a[href="#${v}"]`); if (t) v === name ? t.setAttribute("aria-current", "page") : t.removeAttribute("aria-current");
+    });
     const m = this.modules[name];
     if (m && this.user) {
       if (!this.started.has(name)) { this.started.add(name); m.init(this.user); }
@@ -35,9 +43,9 @@ const App = {
     this.user = user;
     $("loginView").hidden = !!user;
     $("appView").hidden = !user;
-    if (!user) { this.started.clear(); return; }
+    if (!user) { this.started.clear(); if (typeof Tax !== "undefined") Tax.reset(); return; }
     $("userEmail").textContent = user.email || "";
-    if (changed) this.started.clear();
+    if (changed) { this.started.clear(); if (typeof Tax !== "undefined") Tax.reset(); }
     this.route();
   }
 };
