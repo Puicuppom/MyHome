@@ -143,13 +143,16 @@
     const rows = last.plan.rows;
     let h = "";
     if (tableMode === "year") {
-      h = `<thead><tr><th class="l">ปีที่</th><th class="l">ช่วงเดือน</th><th>จ่ายรวม</th><th>ดอกเบี้ย</th><th>ตัดเงินต้น</th><th>โปะก้อน</th><th>คงเหลือปลายปี</th></tr></thead><tbody>`;
-      for (let i = 0; i < rows.length; i += 12) {
-        const ch = rows.slice(i, i + 12), s = k => ch.reduce((a, r) => a + r[k], 0);
-        h += `<tr><td class="l">${i / 12 + 1}</td><td class="l">${monthLabel(ch[0].date)} – ${monthLabel(ch[ch.length - 1].date)}</td>
+      h = `<thead><tr><th class="l">ปี พ.ศ.</th><th class="l">ช่วงเดือน</th><th>จ่ายรวม</th><th>ดอกเบี้ย</th><th>ตัดเงินต้น</th><th>โปะก้อน</th><th>คงเหลือ ณ สิ้นงวด</th></tr></thead><tbody>`;
+      // แบ่งตามปีปฏิทิน (ม.ค.–ธ.ค.) ให้ตรงกับปีภาษี
+      const groups = [];
+      rows.forEach(r => { const y = r.date.getFullYear(); if (!groups.length || groups[groups.length - 1].y !== y) groups.push({ y, rows: [] }); groups[groups.length - 1].rows.push(r); });
+      groups.forEach(({ y, rows: ch }) => {
+        const s = k => ch.reduce((a, r) => a + r[k], 0);
+        h += `<tr><td class="l">${be(y)}</td><td class="l">${monthLabel(ch[0].date)} – ${monthLabel(ch[ch.length - 1].date)} <span class="muted small">(${ch.length} งวด)</span></td>
           <td class="num">${fmt(s("payment") + s("lump"))}</td><td class="num">${fmt(s("interest"))}</td><td class="num">${fmt(s("principal") + s("lump"))}</td>
           <td class="num">${s("lump") ? fmt(s("lump")) : "–"}</td><td class="num">${fmt(ch[ch.length - 1].bal)}</td></tr>`;
-      }
+      });
     } else {
       h = `<thead><tr><th class="l">งวด</th><th class="l">เดือน</th><th>ค่างวด</th><th>ดอกเบี้ย</th><th>ตัดเงินต้น</th><th>โปะก้อน</th><th>คงเหลือ</th><th>ดอกเบี้ย %</th></tr></thead><tbody>`;
       rows.forEach(r => {
