@@ -1,7 +1,7 @@
 {
-  "name": "MyHome — ผ่อนบ้าน & ค่าเช่า",
-  "short_name": "MyHome",
-  "description": "คำนวณผ่อนบ้าน เทียบการโปะ และบันทึกรายรับค่าเช่าเพื่อยื่น ภ.ง.ด.94 / ภ.ง.ด.90",
+  "name": "PuiHome&Tax — ผ่อนบ้าน ค่าเช่า ภาษี",
+  "short_name": "PuiHome&Tax",
+  "description": "คำนวณผ่อนบ้าน เทียบการโปะ บันทึกค่าเช่า เงินได้ และลดหย่อน เพื่อวางแผน ภ.ง.ด.94 / ภ.ง.ด.90",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,7 +9,23 @@
   "theme_color": "#4f5bd5",
   "orientation": "portrait",
   "icons": [
-    { "src": "https://cdn-icons-png.flaticon.com/512/2641/2641242.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "https://cdn-icons-png.flaticon.com/192/2641/2641242.png", "sizes": "192x192", "type": "image/png" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5b67e0"/><stop offset="1" stop-color="#3e48b8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <!-- house -->
+  <path d="M96 248 256 116l160 132" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M136 226v164a20 20 0 0 0 20 20h200a20 20 0 0 0 20-20V226" fill="none" stroke="#fff" stroke-width="36" stroke-linejoin="round"/>
+  <!-- rising bars (tax/plan) -->
+  <rect x="186" y="322" width="36" height="60" rx="8" fill="#fff"/>
+  <rect x="238" y="290" width="36" height="92" rx="8" fill="#fff"/>
+  <rect x="290" y="252" width="36" height="130" rx="8" fill="#ffd36b"/>
+</svg>
