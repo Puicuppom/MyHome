@@ -12,19 +12,19 @@
     if (!user) return;
     const y = Tax.st.year, c = Tax.compute(y), items = c.ded;
     $("dTotal").textContent = fmt(c.dedTotal);
-    let h = `<tr class="sub"><td class="l">ส่วนตัว</td><td class="l small">อัตโนมัติ</td><td class="num">60,000.00</td><td class="num">60,000.00</td><td></td></tr>`;
-    if (c.ssoSlip) h += `<tr><td class="l">ประกันสังคม</td><td class="l small">จากแท็บเงินได้</td><td class="num">${fmt(c.ssoSlip)}</td><td class="num">${fmt(c.ssoSlip)}</td><td></td></tr>`;
+    let h = `<tr class="sub"><td class="l c-name">ส่วนตัว</td><td class="l small c-hint">อัตโนมัติ</td><td class="num c-raw c-none">60,000.00</td><td class="num c-ok">60,000.00</td><td class="c-none"></td></tr>`;
+    if (c.ssoSlip) h += `<tr class="sub"><td class="l c-name">ประกันสังคม</td><td class="l small c-hint">จากแท็บเงินได้</td><td class="num c-raw c-none">${fmt(c.ssoSlip)}</td><td class="num c-ok">${fmt(c.ssoSlip)}</td><td class="c-none"></td></tr>`;
     const cats = Object.keys(D).filter(k => items.some(d => d.category === k));
     cats.forEach(k => {
       const list = items.filter(d => d.category === k), raw = list.reduce((a, d) => a + +d.amount, 0);
       const allowed = k === "sso" ? c.allow.sso - c.ssoSlip : (c.allow[k] || 0);
       const cut = allowed < raw - 0.005 && !k.startsWith("donation_edu");
-      h += `<tr class="sub"><td class="l">${D[k].label}</td><td class="l small" style="white-space:normal">${esc(D[k].hint)}</td><td class="num">${fmt(raw)}</td>
-        <td class="num" ${cut ? 'style="color:var(--bad)"' : ""}>${fmt(allowed)}${cut ? " ⚠" : ""}</td><td></td></tr>`;
-      list.forEach(d => { h += `<tr><td class="l small">&nbsp;&nbsp;${esc(d.label || "–")}</td><td class="l small" style="white-space:normal">${esc(d.note || "")}</td><td class="num">${fmt(d.amount)}</td><td></td>
-        <td><button class="btn-link" data-edit="${d.id}">แก้ไข</button><button class="btn-link btn-danger" data-del="${d.id}">ลบ</button></td></tr>`; });
+      h += `<tr class="sub"><td class="l c-name">${D[k].label}</td><td class="l small c-hint" style="white-space:normal">${esc(D[k].hint)}</td><td class="num c-raw" data-label="กรอก">${fmt(raw)}</td>
+        <td class="num c-ok" ${cut ? 'style="color:var(--bad)"' : ""}>${fmt(allowed)}${cut ? " ⚠" : ""}</td><td class="c-none"></td></tr>`;
+      list.forEach(d => { h += `<tr class="item"><td class="l small c-name">&nbsp;&nbsp;${esc(d.label || "–")}</td><td class="l small c-hint${d.note ? "" : " c-none"}" style="white-space:normal">${esc(d.note || "")}</td><td class="num c-raw">${fmt(d.amount)}</td><td class="c-none"></td>
+        <td class="c-act"><button class="btn-link" data-edit="${d.id}">แก้ไข</button><button class="btn-link btn-danger" data-del="${d.id}">ลบ</button></td></tr>`; });
     });
-    h += `<tr class="sub"><td class="l" colspan="3">รวมหักลดหย่อนได้ ปี ${be(y)}</td><td class="num">${fmt(c.dedTotal)}</td><td></td></tr>`;
+    h += `<tr class="sub total"><td class="l c-name" colspan="3">รวมหักลดหย่อนได้ ปี ${be(y)}</td><td class="num c-ok">${fmt(c.dedTotal)}</td><td class="c-none"></td></tr>`;
     $("dBody").innerHTML = h;
     $("dEmpty").hidden = !!items.length || !Tax.st.loaded;
   }

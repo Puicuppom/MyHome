@@ -88,21 +88,25 @@
       <dt>ดอกเบี้ยรวม</dt><dd>${fmt(s.totalInt)}</dd>
       <dt>จ่ายทั้งหมด</dt><dd>${fmt(s.totalPaid)}</dd>`;
   }
+  function renderCompare(base, plan, birth) {
+    const R = [["ระยะเวลา", s => dur(s.months)], ["จำนวนงวด", s => fmt0(s.months) + " งวด"], ["ผ่อนหมด", s => monthLabel(s.end)]];
+    if (birth) R.push(["อายุตอนผ่อนหมด", s => ageAt(birth, s.end)]);
+    R.push(["ดอกเบี้ยรวม", s => fmt0(s.totalInt)], ["จ่ายทั้งหมด", s => fmt0(s.totalPaid)]);
+    $("cmpBody").innerHTML = R.map(([k, f]) => `<tr><th class="l">${k}</th><td class="num">${base ? f(base) : (k === "ระยะเวลา" ? '<span style="color:var(--bad)">ผ่อนไม่หมด</span>' : "–")}</td><td class="num plan">${f(plan)}</td></tr>`).join("");
+  }
   function calculate() {
     const d = read(); $("loanErr").textContent = "";
     if (d.loanAmount <= 0 || d.monthlyPayment <= 0) { $("loanResult").hidden = true; $("loanErr").textContent = "กรอกยอดเงินกู้และค่างวดให้มากกว่า 0"; return; }
     const base = simulate(d, false), plan = simulate(d, true);
     if (plan.error) { $("loanResult").hidden = true; $("loanErr").textContent = plan.error; return; }
     $("loanResult").hidden = false;
-    $("scnPlan").innerHTML = kv(plan, d.birthDate);
+    renderCompare(base.error ? null : base, plan, d.birthDate);
     const now = new Date(), nowM = now.getFullYear() * 12 + now.getMonth();
     const left = plan.rows.filter(r => r.date.getFullYear() * 12 + r.date.getMonth() >= nowM).length;
     const leftCard = `<div class="save" style="background:var(--primary-soft)"><div class="small">เหลือเวลาผ่อน (นับจากเดือนนี้)</div><div class="big" style="color:var(--primary)">${left ? dur(left) : "ผ่อนหมดแล้ว"}</div><div class="small muted">อีก ${fmt0(left)} งวด · หมด ${monthLabel(plan.end)}</div></div>`;
     if (base.error) {
-      $("scnBase").innerHTML = `<dt>ผล</dt><dd style="color:var(--bad);white-space:normal;text-align:right">${esc(base.error)}</dd>`;
       $("savings").innerHTML = `<div class="save"><div class="small">ถ้าไม่โปะ</div><div class="big" style="color:var(--bad)">ผ่อนไม่หมด</div><div class="small muted">ค่างวดปกติไม่พอจ่ายดอกเบี้ย</div></div>${leftCard}`;
     } else {
-      $("scnBase").innerHTML = kv(base, d.birthDate);
       const sm = base.months - plan.months, si = base.totalInt - plan.totalInt;
       $("savings").innerHTML = `
         <div class="save"><div class="small">ประหยัดดอกเบี้ย</div><div class="big">${fmt0(si)} ฿</div><div class="small muted">${base.totalInt ? ((si / base.totalInt) * 100).toFixed(1) : 0}% ของดอกเบี้ยทั้งหมด</div></div>

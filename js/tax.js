@@ -121,8 +121,10 @@ const Tax = (function () {
     const c = compute(year), B = be(year), h = c.h1, y = c.y;
     const line = (k, v, cls = "") => `<dt class="${cls}">${k}</dt><dd class="${cls}">${v}</dd>`;
     return `
-    <article class="card taxcard">
-      <div class="spread"><div><div class="code">ภ.ง.ด.94</div><div class="small muted">ค่าเช่า ม.ค.–มิ.ย. ${B} · ยื่น 1 ก.ค.–30 ก.ย. ${B}</div></div>${chip(new Date(year, 8, 30, 23, 59), "ยังไม่ถึงกำหนด")}</div>
+    <article class="card taxcard"><details class="tx" data-k="94">
+      <summary class="tx-sum"><span class="code">ภ.ง.ด.94</span>${chip(new Date(year, 8, 30, 23, 59), "ยังไม่ถึงกำหนด")}
+        <span class="tx-due"><span class="small muted">ต้องชำระ</span><b class="num">${fmt0(h.due)}</b></span></summary>
+      <div class="small muted">ค่าเช่า ม.ค.–มิ.ย. ${B} · ยื่น 1 ก.ค.–30 ก.ย. ${B}</div>
       <dl class="kv">
         ${line(`ค่าเช่าที่ได้รับ (${h.count} รายการ)`, fmt(c.g1))}
         ${line(`หักค่าใช้จ่าย${c.flat ? "เหมา 30%" : "ตามจริง"}`, "−" + fmt(c.e1))}
@@ -133,9 +135,11 @@ const Tax = (function () {
         ${line("ต้องชำระโดยประมาณ", fmt(h.due), "total")}
       </dl>
       <p class="small muted" style="margin:0">${c.g1 > 60000 ? "เงินได้ครึ่งปีเกิน 60,000 ต้องยื่น (คนโสด)" : "เงินได้ครึ่งปีไม่เกิน 60,000 คนโสดไม่ต้องยื่น"}${h.due >= 3000 ? " · ผ่อนชำระได้ 3 งวด" : ""}</p>
-    </article>
-    <article class="card taxcard">
-      <div class="spread"><div><div class="code">ภ.ง.ด.90</div><div class="small muted">เงินได้ทั้งปี ${B} · ยื่นภายใน 31 มี.ค. ${B + 1}</div></div>${chip(new Date(year + 1, 2, 31, 23, 59), "รอสิ้นปี")}</div>
+    </details></article>
+    <article class="card taxcard"><details class="tx" data-k="90">
+      <summary class="tx-sum"><span class="code">ภ.ง.ด.90</span>${chip(new Date(year + 1, 2, 31, 23, 59), "รอสิ้นปี")}
+        <span class="tx-due"><span class="small muted">${y.due < 0 ? "ได้คืน" : "ต้องชำระเพิ่ม"}</span><b class="num" style="color:${y.due < 0 ? "var(--good)" : "var(--bad)"}">${fmt0(Math.abs(y.due))}</b></span></summary>
+      <div class="small muted">เงินได้ทั้งปี ${B} · ยื่นภายใน 31 มี.ค. ${B + 1}</div>
       <dl class="kv">
         ${c.i1 ? line(`เงินเดือน / โบนัส 40(1)${c.usingEst ? " (ประมาณการ)" : ""}`, fmt(c.i1)) : ""}
         ${c.i2 ? line("ค่าจ้าง / ฟรีแลนซ์ 40(2)", fmt(c.i2)) : ""}
@@ -153,7 +157,7 @@ const Tax = (function () {
       </dl>
       ${c.i1 + c.i2 + c.iO ? `<p class="small" style="margin:0">ภาษีที่เพิ่มขึ้นเพราะค่าเช่า ≈ <b>${fmt(y.rentTax)}</b> บาท/ปี (เดือนละ ≈ ${fmt0(y.rentTax / 12)})</p>`
         : `<p class="small muted" style="margin:0">ยังไม่มีเงินได้อื่น <a href="#income">บันทึกเงินเดือนในแท็บเงินได้</a> เพื่อประมาณการให้ใกล้จริง</p>`}
-    </article>`;
+    </details></article>`;
   }
 
   function yearsAvailable() {
@@ -163,10 +167,16 @@ const Tax = (function () {
     return [...ys].sort((a, b) => b - a);
   }
   function renderShared() {
-    document.querySelectorAll(".taxsum").forEach(el => { el.innerHTML = summaryHTML(st.year); });
+    const wide = matchMedia("(min-width: 700px)").matches;
+    document.querySelectorAll(".taxsum").forEach(el => {
+      el.innerHTML = summaryHTML(st.year);
+      el.querySelectorAll("details.tx").forEach(d => { const k = d.dataset.k; d.open = k in openTx ? openTx[k] : wide; });
+    });
     const opts = yearsAvailable().map(y => `<option value="${y}" ${y === st.year ? "selected" : ""}>${be(y)}</option>`).join("");
     document.querySelectorAll("select.yearSel").forEach(sel => { sel.innerHTML = opts; });
   }
+  const openTx = {};   // จำว่าผู้ใช้กางการ์ดไหนไว้
+  document.addEventListener("toggle", e => { if (e.target.matches && e.target.matches("details.tx")) openTx[e.target.dataset.k] = e.target.open; }, true);
   function emit() { renderShared(); subs.forEach(fn => { try { fn(); } catch (e) { console.error(e); } }); }
 
   async function load() {

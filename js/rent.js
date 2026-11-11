@@ -23,19 +23,19 @@
     $("tenantList").innerHTML = [...new Set(all.map(e => e.tenant).filter(Boolean))].map(t => `<option value="${esc(t)}">`).join("");
     const rows = yearEntries().filter(e => !fp || e.property === fp).sort((a, b) => a.received_date.localeCompare(b.received_date));
     $("rCount").textContent = rows.length ? `· ${rows.length} รายการ` : "";
-    if (!rows.length) { $("rBody").innerHTML = `<tr><td colspan="7" class="empty">${Tax.st.loaded ? `ยังไม่มีรายการของปี ${be(Tax.st.year)}<br><span class="small">กรอกวันที่ได้รับเงินและจำนวนเงินด้านบน แล้วกด "บันทึก"</span>` : "กำลังโหลด…"}</td></tr>`; return; }
+    if (!rows.length) { $("rBody").innerHTML = `<tr><td colspan="7" class="empty c-empty">${Tax.st.loaded ? `ยังไม่มีรายการของปี ${be(Tax.st.year)}<br><span class="small">กรอกวันที่ได้รับเงินและจำนวนเงินด้านบน แล้วกด "บันทึก"</span>` : "กำลังโหลด…"}</td></tr>`; return; }
     let h = "", cur = 0, sub = 0, subW = 0;
-    const flush = lbl => { h += `<tr class="sub"><td class="l" colspan="3">${lbl}</td><td class="num">${fmt(sub)}</td><td class="num">${fmt(subW)}</td><td colspan="2"></td></tr>`; };
+    const flush = lbl => { h += `<tr class="sub"><td class="l c-sublbl" colspan="3">${lbl}</td><td class="num c-amt">${fmt(sub)}</td><td class="num c-wht${subW ? "" : " c-none"}" data-label="หัก ณ ที่จ่าย">${fmt(subW)}</td><td class="c-none" colspan="2"></td></tr>`; };
     rows.forEach(e => {
       const hh = half(e);
       if (cur && hh !== cur) { flush("รวม ม.ค.–มิ.ย. (ภ.ง.ด.94)"); sub = 0; subW = 0; }
       cur = hh; sub += Number(e.amount) || 0; subW += Number(e.wht) || 0;
-      h += `<tr><td class="l num">${thDate(e.received_date)}</td>
-        <td class="l"><div>${esc(e.property)}</div><div class="small muted">${esc(e.tenant || "")}${e.method ? " · " + esc(e.method) : ""}</div></td>
-        <td class="l">${e.for_month ? `<span class="tag">${thMonth(e.for_month)}</span>` : ""}</td>
-        <td class="num">${fmt(e.amount)}</td><td class="num">${Number(e.wht) ? fmt(e.wht) : "–"}</td>
-        <td class="l small" style="white-space:normal;min-width:140px">${esc(e.note || "")}</td>
-        <td><button class="btn-link" data-copy="${e.id}" title="คัดลอกเป็นเดือนถัดไป">คัดลอก</button><button class="btn-link" data-edit="${e.id}">แก้ไข</button><button class="btn-link btn-danger" data-del="${e.id}">ลบ</button></td></tr>`;
+      h += `<tr><td class="l num c-date">${thDate(e.received_date)}</td>
+        <td class="l c-sub"><div>${esc(e.property)}</div><div class="small muted">${esc(e.tenant || "")}<span class="hide-sm">${e.method ? " · " + esc(e.method) : ""}</span></div></td>
+        <td class="l c-month">${e.for_month ? `<span class="tag">${thMonth(e.for_month)}</span>` : ""}</td>
+        <td class="num c-amt">${fmt(e.amount)}</td><td class="num c-wht${Number(e.wht) ? "" : " c-none"}" data-label="หัก ณ ที่จ่าย">${Number(e.wht) ? fmt(e.wht) : "–"}</td>
+        <td class="l small c-note${e.note ? "" : " c-none"}" style="white-space:normal;min-width:140px">${esc(e.note || "")}</td>
+        <td class="c-act"><button class="btn-link" data-copy="${e.id}" title="คัดลอกเป็นเดือนถัดไป">คัดลอก</button><button class="btn-link" data-edit="${e.id}">แก้ไข</button><button class="btn-link btn-danger" data-del="${e.id}">ลบ</button></td></tr>`;
     });
     flush(cur === 1 ? "รวม ม.ค.–มิ.ย. (ภ.ง.ด.94)" : "รวม ก.ค.–ธ.ค.");
     $("rBody").innerHTML = h;
