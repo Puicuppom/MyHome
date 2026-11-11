@@ -142,7 +142,19 @@ ${leftCard}`;
   }
   function drawTable() {
     if (!last) return;
-    const rows = last.plan.rows;
+    const all = last.plan.rows;
+    // ตัวกรองปี / เดือน
+    const years = [...new Set(all.map(r => r.date.getFullYear()))];
+    const ySel = $("sfYear"), mSel = $("sfMonth"), yPrev = ySel.value, mPrev = mSel.value;
+    ySel.innerHTML = `<option value="">ทุกปี</option>` + years.map(y => `<option value="${y}">${be(y)}</option>`).join("");
+    ySel.value = years.includes(Number(yPrev)) ? yPrev : "";
+    $("sfMonthWrap").hidden = tableMode !== "month";
+    const fy = Number(ySel.value) || 0;
+    const months = [...new Set(all.filter(r => !fy || r.date.getFullYear() === fy).map(r => r.date.getMonth()))].sort((a, b) => a - b);
+    mSel.innerHTML = `<option value="">ทุกเดือน</option>` + months.map(m => `<option value="${m}">${TH_M[m]}</option>`).join("");
+    mSel.value = mPrev !== "" && months.includes(Number(mPrev)) ? mPrev : "";
+    const fm = mSel.value === "" ? -1 : Number(mSel.value);
+    const rows = all.filter(r => (!fy || r.date.getFullYear() === fy) && (tableMode !== "month" || fm < 0 || r.date.getMonth() === fm));
     // data-label ใช้แสดงเป็นการ์ดบนมือถือ (ดู css .sched)
     const td = (label, v, cls = "num", extra = "") => `<td class="${cls}${extra}" data-label="${label}">${v}</td>`;
     let h = "";
@@ -166,6 +178,7 @@ ${leftCard}`;
           ${td("โปะก้อน", r.lump ? fmt(r.lump) : "–", "num", r.lump ? "" : " c-none")}${td("คงเหลือ", fmt(r.bal), "num", " c-key")}${td("ดอกเบี้ย", r.rate.toFixed(2) + "%")}</tr>`;
       });
     }
+    if (!rows.length) h += `<tr><td class="empty" colspan="8">ไม่มีงวดในช่วงที่เลือก</td></tr>`;
     $("schedule").innerHTML = h + "</tbody>";
   }
 
@@ -204,6 +217,8 @@ ${leftCard}`;
   seg($("chInt"), $("chBal"), () => { chartMode = "int"; drawChart(); });
   seg($("tblYear"), $("tblMonth"), () => { tableMode = "year"; drawTable(); });
   seg($("tblMonth"), $("tblYear"), () => { tableMode = "month"; drawTable(); });
+  $("sfYear").addEventListener("change", drawTable);
+  $("sfMonth").addEventListener("change", drawTable);
 
   // ---------- init ----------
   async function init(u) {

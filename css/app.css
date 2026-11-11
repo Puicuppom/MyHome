@@ -139,3 +139,5 @@ body.has-installbar{padding-bottom:calc(90px + env(safe-area-inset-bottom))}
   #schedule td.c-key{grid-column:1/-1;font-weight:700;color:var(--primary)}
   #schedule td.c-none{display:none}
 }
+
+@media (max-width:640px){#schedule td.empty{display:block;text-align:center;white-space:normal}#schedule td.empty::before{content:none}}
