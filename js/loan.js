@@ -143,6 +143,8 @@ ${leftCard}`;
   function drawTable() {
     if (!last) return;
     const rows = last.plan.rows;
+    // data-label ใช้แสดงเป็นการ์ดบนมือถือ (ดู css .sched)
+    const td = (label, v, cls = "num", extra = "") => `<td class="${cls}${extra}" data-label="${label}">${v}</td>`;
     let h = "";
     if (tableMode === "year") {
       h = `<thead><tr><th class="l">ปี พ.ศ.</th><th class="l">ช่วงเดือน</th><th>จ่ายรวม</th><th>ดอกเบี้ย</th><th>ตัดเงินต้น</th><th>โปะก้อน</th><th>คงเหลือ ณ สิ้นงวด</th></tr></thead><tbody>`;
@@ -150,16 +152,18 @@ ${leftCard}`;
       const groups = [];
       rows.forEach(r => { const y = r.date.getFullYear(); if (!groups.length || groups[groups.length - 1].y !== y) groups.push({ y, rows: [] }); groups[groups.length - 1].rows.push(r); });
       groups.forEach(({ y, rows: ch }) => {
-        const s = k => ch.reduce((a, r) => a + r[k], 0);
-        h += `<tr><td class="l">${be(y)}</td><td class="l">${monthLabel(ch[0].date)} – ${monthLabel(ch[ch.length - 1].date)} <span class="muted small">(${ch.length} งวด)</span></td>
-          <td class="num">${fmt(s("payment") + s("lump"))}</td><td class="num">${fmt(s("interest"))}</td><td class="num">${fmt(s("principal") + s("lump"))}</td>
-          <td class="num">${s("lump") ? fmt(s("lump")) : "–"}</td><td class="num">${fmt(ch[ch.length - 1].bal)}</td></tr>`;
+        const s = k => ch.reduce((a, r) => a + r[k], 0), lump = s("lump");
+        h += `<tr><td class="l c-head" data-label="ปี">${be(y)}</td>
+          <td class="l c-sub" data-label="ช่วง">${monthLabel(ch[0].date)} – ${monthLabel(ch[ch.length - 1].date)} <span class="muted small">(${ch.length} งวด)</span></td>
+          ${td("จ่ายรวม", fmt(s("payment") + lump))}${td("ดอกเบี้ย", fmt(s("interest")))}${td("ตัดเงินต้น", fmt(s("principal") + lump))}
+          ${td("โปะก้อน", lump ? fmt(lump) : "–", "num", lump ? "" : " c-none")}${td("คงเหลือ", fmt(ch[ch.length - 1].bal), "num", " c-key")}</tr>`;
       });
     } else {
       h = `<thead><tr><th class="l">งวด</th><th class="l">เดือน</th><th>ค่างวด</th><th>ดอกเบี้ย</th><th>ตัดเงินต้น</th><th>โปะก้อน</th><th>คงเหลือ</th><th>ดอกเบี้ย %</th></tr></thead><tbody>`;
       rows.forEach(r => {
-        h += `<tr class="${r.lump ? "lumprow" : ""}"><td class="l">${r.n}</td><td class="l">${monthLabel(r.date)}</td><td class="num">${fmt(r.payment)}</td><td class="num">${fmt(r.interest)}</td>
-          <td class="num">${fmt(r.principal)}</td><td class="num">${r.lump ? fmt(r.lump) : "–"}</td><td class="num">${fmt(r.bal)}</td><td class="num">${r.rate.toFixed(2)}</td></tr>`;
+        h += `<tr class="${r.lump ? "lumprow" : ""}"><td class="l c-head" data-label="งวด">งวด ${r.n}</td><td class="l c-sub" data-label="เดือน">${monthLabel(r.date)}</td>
+          ${td("ค่างวด", fmt(r.payment))}${td("ดอกเบี้ย", fmt(r.interest))}${td("ตัดเงินต้น", fmt(r.principal))}
+          ${td("โปะก้อน", r.lump ? fmt(r.lump) : "–", "num", r.lump ? "" : " c-none")}${td("คงเหลือ", fmt(r.bal), "num", " c-key")}${td("ดอกเบี้ย", r.rate.toFixed(2) + "%")}</tr>`;
       });
     }
     $("schedule").innerHTML = h + "</tbody>";

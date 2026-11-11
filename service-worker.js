@@ -1,6 +1,6 @@
 // network-first สำหรับไฟล์ของแอป (อัปเดตเห็นทันที), ไม่แคชคำขอ Supabase
-const CACHE = 'puihometax-v19';
-const ASSETS = ['./', './index.html', './css/app.css?v=19', './js/core.js?v=19', './js/loan.js?v=19', './js/tax.js?v=19', './js/income.js?v=19', './js/rent.js?v=19', './js/deduct.js?v=19', './manifest.json', './icons/logo.svg', './icons/icon-192.png'];
+const CACHE = 'puihometax-v20';
+const ASSETS = ['./', './index.html', './css/app.css?v=20', './js/core.js?v=20', './js/loan.js?v=20', './js/tax.js?v=20', './js/income.js?v=20', './js/rent.js?v=20', './js/deduct.js?v=20', './manifest.json', './icons/logo.svg', './icons/icon-192.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));

@@ -120,3 +120,22 @@ footer{font-size:.8rem;color:var(--muted)}
 body.has-installbar{padding-bottom:calc(90px + env(safe-area-inset-bottom))}
 @media (min-width:700px){.installbar{left:auto;right:20px;bottom:20px;max-width:420px;border:1px solid var(--line);border-radius:14px}
   body.has-installbar{padding-bottom:24px}}
+
+/* ตารางผ่อน: มือถือแสดงเป็นการ์ด ไม่ต้องเลื่อนซ้ายขวา */
+@media (max-width:640px){
+  .tablebox:has(#schedule){overflow-x:hidden;border:0;max-height:70vh}
+  #schedule{min-width:0}
+  #schedule thead{display:none}
+  #schedule,#schedule tbody{display:block}
+  #schedule tr{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px;padding:10px 12px;margin-bottom:8px;
+    border:1px solid var(--line);border-radius:10px;background:var(--card)}
+  #schedule tr.lumprow{background:var(--good-soft)}
+  #schedule td{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border:0;white-space:nowrap;font-size:.9rem;min-width:0}
+  #schedule td::before{content:attr(data-label);color:var(--muted);font-size:.8rem}
+  #schedule td.c-head,#schedule td.c-sub{grid-column:1/-1;justify-content:flex-start}
+  #schedule td.c-head{font-weight:700;font-size:1rem}
+  #schedule td.c-head::before,#schedule td.c-sub::before{content:none}
+  #schedule td.c-sub{color:var(--muted);font-size:.85rem;white-space:normal;padding-bottom:6px;border-bottom:1px dashed var(--line);margin-bottom:4px}
+  #schedule td.c-key{grid-column:1/-1;font-weight:700;color:var(--primary)}
+  #schedule td.c-none{display:none}
+}
