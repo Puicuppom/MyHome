@@ -55,20 +55,16 @@
   <path d="M82 220 256 84" stroke="#ffd2c2" stroke-width="6" stroke-linecap="round" opacity=".8"/>
   <circle cx="256" cy="178" r="20" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
   <path d="M256 160v36M238 178h36" stroke="#c9c0ff" stroke-width="4"/>
-  <rect x="150" y="222" width="140" height="70" rx="12" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
-  <path d="M168 276l30-22 22 12 40-30" fill="none" stroke="url(#line)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="262" cy="236" r="10" fill="url(#dot)" stroke="#fff" stroke-width="3"/>
-  <path d="M312 402v-148a28 28 0 0 1 56 0v148z" fill="url(#door)"/>
   </g>
 
-  <!-- TAX ribbon across the house front -->
+  <!-- TAX sash across the house -->
   <g filter="url(#sh2)">
-    <path d="M58 334h62v80H58l22-40z" fill="url(#tail)"/>
-    <path d="M454 334h-62v80h62l-22-40z" fill="url(#tail)"/>
-    <path d="M100 414l20 16v-16z M412 414l-20 16v-16z" fill="#8a5606"/>
-    <rect x="96" y="314" width="320" height="100" rx="10" fill="#fff"/>
-    <rect x="104" y="322" width="304" height="84" rx="6" fill="url(#pill)"/>
+    <path d="M54 262h70v138H54l26-69z" fill="url(#tail)"/>
+    <path d="M458 262h-70v138h70l-26-69z" fill="url(#tail)"/>
+    <path d="M94 400l26 18v-18z M418 400l-26 18v-18z" fill="#8a5606"/>
+    <rect x="86" y="244" width="340" height="156" rx="12" fill="#fff"/>
+    <rect x="95" y="253" width="322" height="138" rx="8" fill="url(#pill)"/>
   </g>
-  <rect x="110" y="326" width="292" height="26" rx="6" fill="#fff" opacity=".4"/>
-  <text x="256" y="390" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="78" letter-spacing="8" fill="#2a1a8f" stroke="#2a1a8f" stroke-width="2">TAX</text>
+  <rect x="102" y="258" width="308" height="40" rx="8" fill="#fff" opacity=".4"/>
+  <text x="256" y="364" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="122" letter-spacing="4" fill="#2a1a8f" stroke="#2a1a8f" stroke-width="3">TAX</text>
 </svg>
