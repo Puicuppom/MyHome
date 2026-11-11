@@ -1,17 +1,52 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#5b67e0"/><stop offset="1" stop-color="#3a43b0"/>
+    <radialGradient id="bg" cx="35%" cy="28%" r="80%">
+      <stop offset="0" stop-color="#9a80ff"/><stop offset=".55" stop-color="#6a4cf0"/><stop offset="1" stop-color="#3f2bbf"/>
+    </radialGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#1e1470" stop-opacity=".45"/>
     </linearGradient>
+    <linearGradient id="house" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6e1ff"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#5a3fe0"/><stop offset="1" stop-color="#8f6bff"/>
+    </linearGradient>
+    <linearGradient id="pill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#f5b52e"/>
+    </linearGradient>
+    <radialGradient id="dot" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#8ef0a8"/><stop offset="1" stop-color="#16a34a"/>
+    </radialGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#1b0f6b" flood-opacity=".45"/>
+    </filter>
+    <filter id="sh2" x="-20%" y="-30%" width="140%" height="180%">
+      <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#1b0f6b" flood-opacity=".5"/>
+    </filter>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#5a3fe0" flood-opacity=".45"/>
+    </filter>
   </defs>
-  <circle cx="256" cy="256" r="256" fill="url(#g)"/>
+  <!-- badge -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="246" fill="none" stroke="url(#rim)" stroke-width="14"/>
+  <ellipse cx="200" cy="120" rx="170" ry="80" fill="#fff" opacity=".10"/>
   <!-- house -->
-  <path d="M134 232 256 128l122 104" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M166 210v112a16 16 0 0 0 16 16h148a16 16 0 0 0 16-16V210" fill="none" stroke="#fff" stroke-width="30" stroke-linejoin="round"/>
-  <!-- rising bars -->
-  <rect x="204" y="280" width="28" height="40" rx="6" fill="#fff"/>
-  <rect x="242" y="256" width="28" height="64" rx="6" fill="#fff"/>
-  <rect x="280" y="228" width="28" height="92" rx="6" fill="#ffd36b"/>
-  <!-- TAX -->
-  <text x="256" y="434" text-anchor="middle" font-family="Arial Black, Arial, Helvetica, sans-serif" font-weight="900" font-size="92" letter-spacing="10" fill="#ffd36b">TAX</text>
+  <g filter="url(#sh)">
+    <path d="M256 92 404 214v120a18 18 0 0 1-18 18H126a18 18 0 0 1-18-18V214z" fill="url(#house)"/>
+  </g>
+  <path d="M256 92 404 214" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".9"/>
+  <path d="M108 214h296" stroke="#cfc6ff" stroke-width="4" opacity=".7"/>
+  <!-- chart -->
+  <g filter="url(#glow)">
+    <path d="M168 300l56-50 42 32 74-74" fill="none" stroke="url(#line)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <circle cx="342" cy="206" r="19" fill="url(#dot)" stroke="#fff" stroke-width="5"/>
+  <!-- TAX pill -->
+  <g filter="url(#sh2)">
+    <rect x="146" y="370" width="220" height="78" rx="39" fill="url(#pill)"/>
+  </g>
+  <rect x="152" y="374" width="208" height="30" rx="15" fill="#fff" opacity=".35"/>
+  <text x="256" y="428" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="56" letter-spacing="8" fill="#3b2aa8">TAX</text>
 </svg>
