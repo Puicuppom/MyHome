@@ -66,3 +66,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   App.setUser(data.session ? data.session.user : null);
   db.auth.onAuthStateChange((_ev, session) => App.setUser(session ? session.user : null));
 });
+
+// ---------- ติดตั้งแอป (PWA) ----------
+(function () {
+  const KEY = "pht.installDismissed";
+  const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const dismissedRecently = () => { try { return Date.now() - Number(localStorage.getItem(KEY) || 0) < 7 * 864e5; } catch (e) { return false; } };
+  const ua = navigator.userAgent;
+  const isIOS = /iphone|ipad|ipod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let deferred = null;
+  const show = () => { if (standalone() || dismissedRecently()) return; $("installBar").hidden = false; document.body.classList.add("has-installbar"); };
+  const hide = () => { $("installBar").hidden = true; document.body.classList.remove("has-installbar"); };
+
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; show(); });
+  window.addEventListener("appinstalled", () => { deferred = null; hide(); });
+
+  // iOS ไม่มีปุ่มติดตั้งอัตโนมัติ → บอกวิธี
+  if (isIOS && !standalone()) {
+    $("ibHint").textContent = "กดปุ่มแชร์ ⬆︎ ของ Safari แล้วเลือก \"เพิ่มไปยังหน้าจอโฮม\"";
+    $("ibInstall").hidden = true;
+    setTimeout(show, 1500);
+  }
+
+  $("ibInstall").addEventListener("click", async () => {
+    if (!deferred) { hide(); return; }
+    deferred.prompt();
+    const { outcome } = await deferred.userChoice;
+    deferred = null;
+    if (outcome !== "accepted") { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} }
+    hide();
+  });
+  $("ibClose").addEventListener("click", () => { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} hide(); });
+})();
