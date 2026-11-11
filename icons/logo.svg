@@ -36,44 +36,39 @@
     <filter id="soft" x="-20%" y="-20%" width="140%" height="160%">
       <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#7a1f10" flood-opacity=".35"/>
     </filter>
+    <linearGradient id="tail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e09a12"/><stop offset="1" stop-color="#b8740a"/></linearGradient>
   </defs>
   <!-- badge -->
   <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
   <circle cx="256" cy="256" r="246" fill="none" stroke="url(#rim)" stroke-width="14"/>
   <ellipse cx="200" cy="118" rx="170" ry="78" fill="#fff" opacity=".10"/>
 
-  <g transform="translate(256 0) scale(.94) translate(-256 -10)">
+  <g transform="translate(0 14)">
   <g filter="url(#sh)">
-    <!-- chimney -->
-    <rect x="324" y="112" width="36" height="74" rx="6" fill="#d9483a"/>
-    <rect x="318" y="104" width="48" height="16" rx="6" fill="#ffd36b"/>
-    <!-- wall -->
-    <path d="M132 226 256 128l124 98v114a18 18 0 0 1-18 18H150a18 18 0 0 1-18-18z" fill="url(#wall)"/>
+    <rect x="330" y="104" width="38" height="80" rx="6" fill="#d9483a"/>
+    <rect x="324" y="96" width="50" height="16" rx="6" fill="#ffd36b"/>
+    <path d="M118 226 256 118l138 108v158a18 18 0 0 1-18 18H136a18 18 0 0 1-18-18z" fill="url(#wall)"/>
   </g>
-  <!-- roof with eaves -->
   <g filter="url(#soft)">
-    <path d="M84 222 256 86l172 136a14 14 0 0 1-17 22L256 122 101 244a14 14 0 0 1-17-22z" fill="url(#roof)"/>
+    <path d="M68 222 256 74l188 148a15 15 0 0 1-18 24L256 112 86 246a15 15 0 0 1-18-24z" fill="url(#roof)"/>
   </g>
-  <path d="M96 222 256 96" stroke="#ffd2c2" stroke-width="6" stroke-linecap="round" opacity=".8"/>
-  <!-- attic window -->
-  <circle cx="256" cy="186" r="20" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
-  <path d="M256 168v36M238 186h36" stroke="#c9c0ff" stroke-width="4"/>
-  <!-- window with chart -->
-  <rect x="158" y="234" width="130" height="96" rx="14" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
-  <path d="M176 308l30-26 22 16 38-38" fill="none" stroke="url(#line)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="268" cy="258" r="11" fill="url(#dot)" stroke="#fff" stroke-width="3"/>
-  <!-- door -->
-  <path d="M308 358v-82a26 26 0 0 1 52 0v82z" fill="url(#door)"/>
-  <circle cx="348" cy="320" r="5" fill="#ffd36b"/>
-  <!-- step -->
-  <rect x="298" y="354" width="72" height="10" rx="5" fill="#c9c0ff"/>
+  <path d="M82 220 256 84" stroke="#ffd2c2" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+  <circle cx="256" cy="178" r="20" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
+  <path d="M256 160v36M238 178h36" stroke="#c9c0ff" stroke-width="4"/>
+  <rect x="150" y="222" width="140" height="70" rx="12" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
+  <path d="M168 276l30-22 22 12 40-30" fill="none" stroke="url(#line)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="262" cy="236" r="10" fill="url(#dot)" stroke="#fff" stroke-width="3"/>
+  <path d="M312 402v-148a28 28 0 0 1 56 0v148z" fill="url(#door)"/>
+  </g>
 
-  </g>
-  <!-- TAX pill -->
+  <!-- TAX ribbon across the house front -->
   <g filter="url(#sh2)">
-    <rect x="118" y="356" width="276" height="98" rx="49" fill="#fff"/>
-    <rect x="126" y="364" width="260" height="82" rx="41" fill="url(#pill)"/>
+    <path d="M58 334h62v80H58l22-40z" fill="url(#tail)"/>
+    <path d="M454 334h-62v80h62l-22-40z" fill="url(#tail)"/>
+    <path d="M100 414l20 16v-16z M412 414l-20 16v-16z" fill="#8a5606"/>
+    <rect x="96" y="314" width="320" height="100" rx="10" fill="#fff"/>
+    <rect x="104" y="322" width="304" height="84" rx="6" fill="url(#pill)"/>
   </g>
-  <rect x="134" y="368" width="244" height="30" rx="15" fill="#fff" opacity=".4"/>
-  <text x="256" y="430" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="74" letter-spacing="6" fill="#2a1a8f" stroke="#2a1a8f" stroke-width="2">TAX</text>
+  <rect x="110" y="326" width="292" height="26" rx="6" fill="#fff" opacity=".4"/>
+  <text x="256" y="390" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="78" letter-spacing="8" fill="#2a1a8f" stroke="#2a1a8f" stroke-width="2">TAX</text>
 </svg>
