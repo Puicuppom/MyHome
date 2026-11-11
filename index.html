@@ -9,14 +9,14 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="PuiHome&amp;Tax">
-  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=22">
-  <link rel="icon" type="image/svg+xml" href="icons/logo.svg?v=22">
-  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=22">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=23">
+  <link rel="icon" type="image/svg+xml" href="icons/logo.svg?v=23">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=23">
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/app.css?v=22">
+  <link rel="stylesheet" href="css/app.css?v=23">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
@@ -25,7 +25,7 @@
 <!-- ============ LOGIN ============ -->
 <section id="loginView" class="login card" hidden>
   <div class="brand">
-    <img src="icons/logo.svg?v=22" alt="" width="30" height="30" style="border-radius:50%"> PuiHome&amp;Tax
+    <img src="icons/logo.svg?v=23" alt="" width="30" height="30" style="border-radius:50%"> PuiHome&amp;Tax
   </div>
   <p class="muted small" style="margin:0">ผ่อนบ้าน · ค่าเช่า · วางแผนภาษี — เข้าสู่ระบบด้วยบัญชีเดียวกับ PuiJod</p>
   <form id="loginForm" class="grid" style="grid-template-columns:1fr">
@@ -40,7 +40,7 @@
 <div id="appView" class="wrap" hidden>
   <header class="topbar">
     <div class="brand">
-      <img src="icons/logo.svg?v=22" alt="" width="30" height="30" style="border-radius:50%"> PuiHome&amp;Tax
+      <img src="icons/logo.svg?v=23" alt="" width="30" height="30" style="border-radius:50%"> PuiHome&amp;Tax
     </div>
     <nav class="tabs" aria-label="เมนู">
       <a href="#loan">ผ่อนบ้าน</a>
@@ -61,7 +61,7 @@
         <div><label class="lbl" for="monthlyPayment">ค่างวดต่อเดือน (บาท)</label><input type="text" id="monthlyPayment" inputmode="numeric" class="money num"></div>
         <div><label class="lbl" for="extraPayment">เงินโปะเพิ่มต่อเดือน (บาท)</label><input type="text" id="extraPayment" inputmode="numeric" class="money num"></div>
         <div><label class="lbl" for="startMonth">เริ่มงวดแรกเดือน</label><input type="month" id="startMonth"></div>
-        <div><label class="lbl" for="birthDate">วันเกิด (ไว้คำนวณอายุตอนผ่อนหมด)</label><input type="date" id="birthDate"></div>
+        <div><label class="lbl" for="birthDate">วันเกิด</label><input type="date" id="birthDate"></div>
       </div>
     </section>
 
@@ -111,10 +111,10 @@
     <section class="forms taxsum"></section>
     <section class="card">
       <div class="spread"><h2>ประมาณการเงินได้ทั้งปี</h2><span class="small muted" id="eState"></span></div>
-      <p class="small muted" style="margin:4px 0 0">กรอกยอดทั้งปีเพื่อวางแผนได้เลย ภาษีที่ถูกหักนับเป็นเครดิตภาษี ประกันสังคมนับเป็นลดหย่อนให้อัตโนมัติ</p>
+      <p class="small muted hide-sm" style="margin:4px 0 0">กรอกยอดทั้งปีเพื่อวางแผนได้เลย ภาษีที่ถูกหักนับเป็นเครดิตภาษี ประกันสังคมนับเป็นลดหย่อนให้อัตโนมัติ</p>
       <div class="grid" style="margin-top:12px">
-        <div><label class="lbl" for="eSalary">เงินเดือน + โบนัส ทั้งปี (คาดการณ์)</label><input type="text" inputmode="numeric" id="eSalary" class="num money"></div>
-        <div><label class="lbl" for="eWht">ภาษีที่ถูกหัก ณ ที่จ่ายทั้งปี</label><input type="text" inputmode="numeric" id="eWht" class="num money" placeholder="ดูจากสลิป × 12"></div>
+        <div><label class="lbl" for="eSalary">เงินเดือน+โบนัส ทั้งปี</label><input type="text" inputmode="numeric" id="eSalary" class="num money"></div>
+        <div><label class="lbl" for="eWht">ภาษีถูกหักทั้งปี</label><input type="text" inputmode="numeric" id="eWht" class="num money" placeholder="ดูจากสลิป × 12"></div>
         <div><label class="lbl" for="eSso">ประกันสังคมทั้งปี</label><input type="text" inputmode="numeric" id="eSso" class="num money" placeholder="ดูจากสลิป × 12"></div>
       </div>
       <details style="margin-top:12px"><summary class="small">ช่วยคำนวณจากรายเดือน</summary>
@@ -140,7 +140,7 @@
     </section>
     <section class="forms taxsum"></section>
     <section class="card">
-      <div class="spread"><h2 id="dFormTitle">เพิ่มรายการลดหย่อน</h2><button type="button" class="btn-ghost btn-sm" id="dLoan" title="คำนวณดอกเบี้ยปีนี้จากแผนในหน้าผ่อนบ้าน">ดึงดอกเบี้ยบ้านจากหน้าผ่อนบ้าน</button></div>
+      <div class="spread"><h2 id="dFormTitle">เพิ่มรายการลดหย่อน</h2><button type="button" class="btn-ghost btn-sm" id="dLoan" title="คำนวณดอกเบี้ยปีนี้จากแผนในหน้าผ่อนบ้าน">ดึงดอกเบี้ยบ้าน</button></div>
       <form id="dForm" autocomplete="off">
         <div class="grid" style="margin-top:12px">
           <div><label class="lbl" for="dCat">ประเภท</label><select id="dCat"></select></div>
@@ -162,7 +162,7 @@
       <div class="tablebox"><table id="dedTbl">
         <thead><tr><th class="l">รายการ</th><th class="l">เงื่อนไข / หมายเหตุ</th><th>ยอดที่กรอก</th><th>หักได้จริง</th><th></th></tr></thead>
         <tbody id="dBody"></tbody></table></div>
-      <p class="small muted">⚠ = เกินเพดาน ระบบตัดให้เหลือเท่าที่หักได้ · เพดานบางรายการเปลี่ยนทุกปี (เช่น ประกันสังคม ช้อปลดหย่อน Thai ESG) ตรวจประกาศกรมสรรพากรของปีนั้น</p>
+      <p class="small muted">⚠ = เกินเพดาน หักได้เท่าที่แสดง<span class="hide-sm"> · เพดานบางรายการเปลี่ยนทุกปี (เช่น ประกันสังคม ช้อปลดหย่อน Thai ESG) ตรวจประกาศกรมสรรพากรของปีนั้น</span></p>
     </section>
   </main>
 
@@ -235,18 +235,18 @@
 
 <!-- ============ INSTALL ============ -->
 <div id="installBar" class="installbar" role="dialog" aria-label="ติดตั้งแอป" hidden>
-  <img src="icons/icon-192.png?v=22" alt="" width="44" height="44">
+  <img src="icons/icon-192.png?v=23" alt="" width="44" height="44">
   <div class="ib-text"><b>ติดตั้ง PuiHome&amp;Tax</b><span class="small muted" id="ibHint">เปิดเร็วจากหน้าจอหลัก ใช้งานเหมือนแอป</span></div>
   <button type="button" class="btn-primary btn-sm" id="ibInstall">ติดตั้ง</button>
   <button type="button" class="btn-link" id="ibClose" aria-label="ปิด">✕</button>
 </div>
 
-<script src="js/core.js?v=22"></script>
-<script src="js/tax.js?v=22"></script>
-<script src="js/loan.js?v=22"></script>
-<script src="js/income.js?v=22"></script>
-<script src="js/rent.js?v=22"></script>
-<script src="js/deduct.js?v=22"></script>
+<script src="js/core.js?v=23"></script>
+<script src="js/tax.js?v=23"></script>
+<script src="js/loan.js?v=23"></script>
+<script src="js/income.js?v=23"></script>
+<script src="js/rent.js?v=23"></script>
+<script src="js/deduct.js?v=23"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));

@@ -260,3 +260,24 @@ details.tx>div.small{margin-bottom:4px}
   #dedTbl tr.sub .c-name{font-weight:600}
   #dedTbl tr.sub .c-hint{color:var(--muted);font-weight:400}
 }
+/* มือถือ: กล่องสรุปผ่อนบ้านเป็นแถว ป้าย-ตัวเลข ไม่ตัดบรรทัด */
+@media (max-width:640px){
+  .savings{grid-template-columns:1fr;gap:6px}
+  .save{display:flex;align-items:baseline;gap:8px;padding:9px 12px}
+  .save .small:first-child{flex:1;font-size:.85rem}
+  .save .big{font-size:1.1rem;white-space:nowrap}
+  .save .small.muted{display:none}
+  table.cmp th,table.cmp td{white-space:nowrap}
+  #fWht5,#rCopyLast,#dLoan,#eFill,#rExport{white-space:nowrap}
+}
+@media (max-width:640px){
+  #dedTbl tr{grid-template-columns:1fr auto;grid-template-areas:"name ok" "hint raw"}
+  #dedTbl tr.item{grid-template-areas:"name act" "hint raw"}
+  #dedTbl tr.item .c-raw{grid-area:raw}
+  #dedTbl tr.item .c-act{grid-area:act}
+  #dedTbl tr.total{grid-template-areas:"name ok"}
+  #dedTbl .c-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+@media (max-width:640px){
+  #dedTbl tr.item{grid-template-columns:1fr auto auto;grid-template-areas:"name raw act" "hint hint hint"}
+}

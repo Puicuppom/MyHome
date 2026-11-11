@@ -103,13 +103,13 @@
     renderCompare(base.error ? null : base, plan, d.birthDate);
     const now = new Date(), nowM = now.getFullYear() * 12 + now.getMonth();
     const left = plan.rows.filter(r => r.date.getFullYear() * 12 + r.date.getMonth() >= nowM).length;
-    const leftCard = `<div class="save" style="background:var(--primary-soft)"><div class="small">เหลือเวลาผ่อน (นับจากเดือนนี้)</div><div class="big" style="color:var(--primary)">${left ? dur(left) : "ผ่อนหมดแล้ว"}</div><div class="small muted">อีก ${fmt0(left)} งวด · หมด ${monthLabel(plan.end)}</div></div>`;
+    const leftCard = `<div class="save" style="background:var(--primary-soft)"><div class="small">เหลือเวลาผ่อน</div><div class="big" style="color:var(--primary)">${left ? dur(left) : "ผ่อนหมดแล้ว"}</div><div class="small muted">อีก ${fmt0(left)} งวด · หมด ${monthLabel(plan.end)}</div></div>`;
     if (base.error) {
       $("savings").innerHTML = `<div class="save"><div class="small">ถ้าไม่โปะ</div><div class="big" style="color:var(--bad)">ผ่อนไม่หมด</div><div class="small muted">ค่างวดปกติไม่พอจ่ายดอกเบี้ย</div></div>${leftCard}`;
     } else {
       const sm = base.months - plan.months, si = base.totalInt - plan.totalInt;
       $("savings").innerHTML = `
-        <div class="save"><div class="small">ประหยัดดอกเบี้ย</div><div class="big">${fmt0(si)} ฿</div><div class="small muted">${base.totalInt ? ((si / base.totalInt) * 100).toFixed(1) : 0}% ของดอกเบี้ยทั้งหมด</div></div>
+        <div class="save"><div class="small">ประหยัดดอกเบี้ย</div><div class="big">${fmt0(si)} ฿</div><div class="small muted">${base.totalInt ? ((si / base.totalInt) * 100).toFixed(1) : 0}% ของดอกเบี้ย</div></div>
         <div class="save"><div class="small">ผ่อนหมดเร็วขึ้น</div><div class="big">${dur(sm)}</div><div class="small muted">${monthLabel(base.end)} → ${monthLabel(plan.end)}</div></div>
 ${leftCard}`;
     }
