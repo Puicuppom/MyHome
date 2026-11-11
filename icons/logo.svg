@@ -42,6 +42,7 @@
   <circle cx="256" cy="256" r="246" fill="none" stroke="url(#rim)" stroke-width="14"/>
   <ellipse cx="200" cy="118" rx="170" ry="78" fill="#fff" opacity=".10"/>
 
+  <g transform="translate(256 0) scale(.94) translate(-256 -10)">
   <g filter="url(#sh)">
     <!-- chimney -->
     <rect x="324" y="112" width="36" height="74" rx="6" fill="#d9483a"/>
@@ -67,10 +68,12 @@
   <!-- step -->
   <rect x="298" y="354" width="72" height="10" rx="5" fill="#c9c0ff"/>
 
+  </g>
   <!-- TAX pill -->
   <g filter="url(#sh2)">
-    <rect x="146" y="378" width="220" height="74" rx="37" fill="url(#pill)"/>
+    <rect x="118" y="356" width="276" height="98" rx="49" fill="#fff"/>
+    <rect x="126" y="364" width="260" height="82" rx="41" fill="url(#pill)"/>
   </g>
-  <rect x="152" y="382" width="208" height="28" rx="14" fill="#fff" opacity=".35"/>
-  <text x="256" y="433" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="54" letter-spacing="8" fill="#3b2aa8">TAX</text>
+  <rect x="134" y="368" width="244" height="30" rx="15" fill="#fff" opacity=".4"/>
+  <text x="256" y="430" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="74" letter-spacing="6" fill="#2a1a8f" stroke="#2a1a8f" stroke-width="2">TAX</text>
 </svg>
