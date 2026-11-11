@@ -6,8 +6,17 @@
     <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#1e1470" stop-opacity=".45"/>
     </linearGradient>
-    <linearGradient id="house" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e6e1ff"/>
+    <linearGradient id="roof" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff8f6b"/><stop offset="1" stop-color="#e5533d"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e9e4ff"/>
+    </linearGradient>
+    <linearGradient id="win" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef0ff"/><stop offset="1" stop-color="#d9d3ff"/>
+    </linearGradient>
+    <linearGradient id="door" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a5cff"/><stop offset="1" stop-color="#4b33d1"/>
     </linearGradient>
     <linearGradient id="line" x1="0" y1="1" x2="1" y2="0">
       <stop offset="0" stop-color="#5a3fe0"/><stop offset="1" stop-color="#8f6bff"/>
@@ -24,29 +33,44 @@
     <filter id="sh2" x="-20%" y="-30%" width="140%" height="180%">
       <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#1b0f6b" flood-opacity=".5"/>
     </filter>
-    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
-      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#5a3fe0" flood-opacity=".45"/>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#7a1f10" flood-opacity=".35"/>
     </filter>
   </defs>
   <!-- badge -->
   <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
   <circle cx="256" cy="256" r="246" fill="none" stroke="url(#rim)" stroke-width="14"/>
-  <ellipse cx="200" cy="120" rx="170" ry="80" fill="#fff" opacity=".10"/>
-  <!-- house -->
+  <ellipse cx="200" cy="118" rx="170" ry="78" fill="#fff" opacity=".10"/>
+
   <g filter="url(#sh)">
-    <path d="M256 92 404 214v120a18 18 0 0 1-18 18H126a18 18 0 0 1-18-18V214z" fill="url(#house)"/>
+    <!-- chimney -->
+    <rect x="324" y="112" width="36" height="74" rx="6" fill="#d9483a"/>
+    <rect x="318" y="104" width="48" height="16" rx="6" fill="#ffd36b"/>
+    <!-- wall -->
+    <path d="M132 226 256 128l124 98v114a18 18 0 0 1-18 18H150a18 18 0 0 1-18-18z" fill="url(#wall)"/>
   </g>
-  <path d="M256 92 404 214" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".9"/>
-  <path d="M108 214h296" stroke="#cfc6ff" stroke-width="4" opacity=".7"/>
-  <!-- chart -->
-  <g filter="url(#glow)">
-    <path d="M168 300l56-50 42 32 74-74" fill="none" stroke="url(#line)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- roof with eaves -->
+  <g filter="url(#soft)">
+    <path d="M84 222 256 86l172 136a14 14 0 0 1-17 22L256 122 101 244a14 14 0 0 1-17-22z" fill="url(#roof)"/>
   </g>
-  <circle cx="342" cy="206" r="19" fill="url(#dot)" stroke="#fff" stroke-width="5"/>
+  <path d="M96 222 256 96" stroke="#ffd2c2" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+  <!-- attic window -->
+  <circle cx="256" cy="186" r="20" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
+  <path d="M256 168v36M238 186h36" stroke="#c9c0ff" stroke-width="4"/>
+  <!-- window with chart -->
+  <rect x="158" y="234" width="130" height="96" rx="14" fill="url(#win)" stroke="#c9c0ff" stroke-width="4"/>
+  <path d="M176 308l30-26 22 16 38-38" fill="none" stroke="url(#line)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="268" cy="258" r="11" fill="url(#dot)" stroke="#fff" stroke-width="3"/>
+  <!-- door -->
+  <path d="M308 358v-82a26 26 0 0 1 52 0v82z" fill="url(#door)"/>
+  <circle cx="348" cy="320" r="5" fill="#ffd36b"/>
+  <!-- step -->
+  <rect x="298" y="354" width="72" height="10" rx="5" fill="#c9c0ff"/>
+
   <!-- TAX pill -->
   <g filter="url(#sh2)">
-    <rect x="146" y="370" width="220" height="78" rx="39" fill="url(#pill)"/>
+    <rect x="146" y="378" width="220" height="74" rx="37" fill="url(#pill)"/>
   </g>
-  <rect x="152" y="374" width="208" height="30" rx="15" fill="#fff" opacity=".35"/>
-  <text x="256" y="428" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="56" letter-spacing="8" fill="#3b2aa8">TAX</text>
+  <rect x="152" y="382" width="208" height="28" rx="14" fill="#fff" opacity=".35"/>
+  <text x="256" y="433" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="54" letter-spacing="8" fill="#3b2aa8">TAX</text>
 </svg>
